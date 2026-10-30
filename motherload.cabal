@@ -1,0 +1,53 @@
+cabal-version:      3.4
+name:               motherload
+version:            0.0.0.0
+synopsis:           Projeto de Laboratórios de Informática \/ Programação I 2026\/27.
+license:            NONE
+author:             Adriano Alejandro Pino Ferreira <a110205@alunos.uminho.pt>
+                    Bruno Ribeiro Souza Santos <a113332@alunos.uminho.pt>
+category:           Game
+tested-with:        GHC == 9.10.3
+build-type:         Simple
+extra-doc-files:    README.md
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+
+    exposed-modules:
+        Labs2026
+        Tarefa0_geral
+        Tarefa0_2026
+        Tarefa1
+        Tarefa2
+        Tarefa3
+
+    build-depends:
+        base, random
+
+    hs-source-dirs:   lib
+    default-language: GHC2021
+
+common feedback
+    import:           warnings
+    other-modules:    Magic
+    build-depends:
+        base,
+        process,
+        motherload
+    hs-source-dirs:   test
+    default-language: GHC2021
+
+executable t1-feedback
+    import:           feedback
+    main-is:          Tarefa1Feedback.hs
+
+executable t2-feedback
+    import:           feedback
+    main-is:          Tarefa2Feedback.hs
+
+executable t3-feedback
+    import:           feedback
+    main-is:          Tarefa3Feedback.hs

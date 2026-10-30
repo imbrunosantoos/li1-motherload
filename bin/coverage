@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#
+# Mede a cobertura dos testes de uma tarefa: corre o t<N>-feedback compilado com cobertura e mostra
+# quanto do código de lib/ foi usado. O relatório completo fica em dist-coverage/t<N>/hpc_index.html.
+#
+# Uso: bin/coverage (t1 | t2 | t3)
+
+set -Eeuo pipefail
+
+# Corre na raiz do projeto, seja chamado com `bin/coverage` ou com `cd bin && ./coverage`.
+cd "$(dirname "$0")/.."
+
+case "${1:-}" in
+  t1 | t2 | t3)
+    tarefa="$1"
+    ;;
+  *)
+    echo "Uso: $0 (t1 | t2 | t3)" >&2
+    exit 1
+    ;;
+esac
+
+# Uma compilação à parte: a do `cabal build` (dist-newstyle) não é apagada nem recompilada.
+build=dist-coverage
+destino="$build/$tarefa"
+tix="$destino/$tarefa-feedback.tix"
+
+# Gera o relatório a partir do .tix, com os .mix de todas as componentes compiladas com
+# cobertura. Só conta o código de lib/ (o pacote motherload), não o dos testes nem o Magic.
+runhpc() {
+  local args=(--include=motherload-0.0.0.0-inplace:)
+  while IFS= read -r -d '' dir; do
+    args+=(--hpcdir="$dir")
+  done < <(find "$build" -type d -path "*/vanilla/mix" -print0)
+
+  hpc markup "$1" "${args[@]}" --destdir="$destino" > /dev/null
+  hpc report "$1" "${args[@]}" --per-module | grep -E '^-----|expressions used'
+}
+
+# Um .tix de uma execução anterior não serve: se o código mudou, o programa recusa-se a juntar-lhe
+# os dados novos.
+mkdir -p "$destino"
+rm -f "$tix"
+HPCTIXFILE="$tix" cabal run --builddir="$build" --enable-coverage "$tarefa-feedback" -- --no-open
+
+runhpc "$tix"
+
+printf '\033[33m*\033[0m Relatório disponível em \033[36m%s\033[0m\n' "$(pwd)/$destino/hpc_index.html"

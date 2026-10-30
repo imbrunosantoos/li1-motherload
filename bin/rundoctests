@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#
+# Corre como testes os exemplos `>>>` dos comentários do código de lib/, com o doctest.
+# O doctest tem de ter sido compilado com a mesma versão do GHC que o cabal usa.
+#
+# Uso: bin/rundoctests
+
+set -Eeuo pipefail
+
+cd "$(dirname "$0")/.."
+
+cabal repl motherload --with-compiler=doctest --repl-options=-Wno-type-defaults
