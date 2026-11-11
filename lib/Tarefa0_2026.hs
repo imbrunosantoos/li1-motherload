@@ -43,7 +43,7 @@ eBlocoEscavavel bloco = durezaBloco bloco /= Nothing
 
 -- | Aplica uma transformação à escavadora do jogo.
 atualizaEscavadora :: (Escavadora -> Escavadora) -> Jogo -> Jogo
-atualizaEscavadora f jogo = jogo {escavadoraJogo = f (escavadoraJogo jogo)} -- escavadoraJogo jogo = jogo->escavadora
+atualizaEscavadora f jogo = jogo {escavadoraJogo = f (escavadoraJogo jogo)}
 
 -- | Verifica se uma posição do mapa tem chão por baixo, ou se está na última linha
 apoiadoAux :: Posicao -> Mapa -> Bool
