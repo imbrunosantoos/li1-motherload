@@ -59,6 +59,26 @@ mapaPequeno =
   , [Rocha, Terra, Terra,        Terra]
   ]
 
+-- * Testes
+
+semCombustivel :: Jogo
+semCombustivel = jogoExemplo { escavadoraJogo = escavadoraExemplo { combustivelEscavadora = 0 } }
+
+escavadoraEmTerra :: Jogo
+escavadoraEmTerra = jogoExemplo { escavadoraJogo = escavadoraExemplo { posicaoEscavadora = (5,3) } }
+
+creditosNegativos :: Jogo
+creditosNegativos = jogoExemplo { creditosJogo = -1 }
+
+superficieComTerra :: Jogo
+superficieComTerra = jogoPequeno
+  { mapaJogo = [ [Ar,    Ar,    Terra,        Ar   ]    
+               , [Terra, Ar,    Rocha,        Terra]
+               , [Terra, Ar,    Minerio Ouro, Lava ]
+               , [Rocha, Terra, Terra,        Terra]
+               ]
+  }
+
 -- | Jogo válido no mapa pequeno-a escavadora está em (2,1), pousada em terra
 jogoPequeno :: Jogo
 jogoPequeno = jogoExemplo
@@ -69,7 +89,8 @@ jogoPequeno = jogoExemplo
 
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes.
 testesTarefa1 :: [Jogo]
-testesTarefa1 = [jogoExemplo, jogoPequeno]
+testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
+                escavadorEmTerra, creditosNegativos, superficieComTerra]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
