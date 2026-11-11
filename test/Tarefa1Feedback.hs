@@ -61,15 +61,19 @@ mapaPequeno =
 
 -- * Testes
 
+-- | Válido- combustível exatamente 0 
 semCombustivel :: Jogo
 semCombustivel = jogoExemplo { escavadoraJogo = escavadoraExemplo { combustivelEscavadora = 0 } }
 
+-- | Inválido- a escavadora está num bloco de Terra
 escavadoraEmTerra :: Jogo
 escavadoraEmTerra = jogoExemplo { escavadoraJogo = escavadoraExemplo { posicaoEscavadora = (5,3) } }
 
+-- | Inválido- créditos negativos 
 creditosNegativos :: Jogo
 creditosNegativos = jogoExemplo { creditosJogo = -1 }
 
+-- | Inválido- há Terra na superfície, em (0,2) 
 superficieComTerra :: Jogo
 superficieComTerra = jogoPequeno
   { mapaJogo = [ [Ar,    Ar,    Terra,        Ar   ]    
