@@ -39,5 +39,17 @@ objetosValidos = undefined
 creditosValidos :: Creditos -> Bool
 creditosValidos creditos = creditos >= 0
 
+-- | Número associado a uma melhoria
+valorMelhoria :: Melhoria -> Int
+valorMelhoria (Deposito combustivel) = combustivel
+valorMelhoria (Vida int) = int
+valorMelhoria (Broca nivel) = nivel
+valorMelhoria (Carga peso) = peso 
+valorMelhoria (Dinamites int) = int
+
+-- | Regra 6: nenhum preço da loja é negativo e todas as melhorias têm valor positivo
 lojaValida :: Loja -> Bool
-lojaValida = undefined
+lojaValida [] = True
+lojaValida ((preco, melhoria):resto) 
+            | creditosValidos preco && valorMelhoria melhoria > 0 = lojaValida resto
+            | otherwise = False 
