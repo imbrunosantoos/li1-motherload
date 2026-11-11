@@ -35,8 +35,9 @@ edificiosValidos = undefined
 objetosValidos :: Mapa -> [Objeto] -> Bool
 objetosValidos = undefined
 
+-- | Regra 5: os créditos não podem ser negativos.
 creditosValidos :: Creditos -> Bool
-creditosValidos = undefined
+creditosValidos creditos = creditos >= 0
 
 lojaValida :: Loja -> Bool
 lojaValida = undefined
