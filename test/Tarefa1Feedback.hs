@@ -13,9 +13,46 @@ import Labs2026
 import Magic
 import Tarefa1
 
+-- * Jogos base
+
+-- | Mapa exemplo do enunciado- 7 linhas e 13 colunas
+mapaExemplo :: Mapa
+mapaExemplo =
+  [ replicate 13 Ar
+  , [Terra, Terra, Rocha, Ar, Terra, Terra, Rocha, Terra, Terra, Terra, Rocha, Terra, Terra]
+  , [Terra, Minerio Ferro, Terra, Ar, Terra, Minerio Prata, Terra, Terra, Lava, Terra, Terra, Minerio Bronze, Terra]
+  , [Terra, Terra, Terra, Ar, Terra, Minerio Ouro, Rocha, Terra, Terra, Minerio Platina, Terra, Terra, Terra]
+  , [Terra, Minerio Diamante, Terra, Ar, Terra, Lava, Terra, Terra, Rocha, Terra, Terra, Minerio Ferro, Terra]
+  , [Rocha, Terra, Terra, Terra, Ar, Terra, Terra, Terra, Terra, Terra, Terra, Terra, Rocha]
+  , [Minerio Ouro, Terra, Terra, Rocha, Terra, Terra, Terra, Terra, Minerio Platina, Terra, Terra, Rocha, Terra]
+  ]
+
+-- | Escavadora do exemplo do enunciado, em (4,3), com o depósito e a vida cheios e a carga vazia
+escavadoraExemplo :: Escavadora
+escavadoraExemplo = Escavadora
+  { posicaoEscavadora = (4,3), direcaoEscavadora = Baixo
+  , combustivelEscavadora = 200, depositoEscavadora = 200
+  , vidaEscavadora = 100, vidaMaximaEscavadora = 100
+  , brocaEscavadora = 1, cargaEscavadora = [], capacidadeEscavadora = 20
+  , quedaEscavadora = 0, voandoEscavadora = False, dinamitesEscavadora = 0
+  }
+
+-- | Jogo do exemplo do enunciado-É válido
+jogoExemplo :: Jogo
+jogoExemplo = Jogo
+  { mapaJogo = mapaExemplo
+  , escavadoraJogo = escavadoraExemplo
+  , edificiosJogo = [Edificio Posto (0,2), Edificio Refinaria (0,6), Edificio Oficina (0,10)]
+  , objetosJogo = []
+  , creditosJogo = 0
+  , lojaJogo = [ (250, Dinamites 3), (500, Carga 40), (800, Deposito 400), (1200, Vida 200)
+               , (1500, Broca 2), (3000, Carga 80), (3500, Deposito 800), (4000, Vida 400)
+               , (5000, Broca 3) ]
+  }
+
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes.
 testesTarefa1 :: [Jogo]
-testesTarefa1 = []
+testesTarefa1 = [jogoExemplo]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
