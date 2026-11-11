@@ -94,7 +94,7 @@ jogoPequeno = jogoExemplo
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes.
 testesTarefa1 :: [Jogo]
 testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
-                escavadorEmTerra, creditosNegativos, superficieComTerra]
+                escavadoraEmTerra, creditosNegativos, superficieComTerra]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
