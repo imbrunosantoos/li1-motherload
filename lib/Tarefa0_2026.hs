@@ -43,24 +43,28 @@ eBlocoEscavavel bloco = durezaBloco bloco /= Nothing
 
 -- | Aplica uma transformação à escavadora do jogo.
 atualizaEscavadora :: (Escavadora -> Escavadora) -> Jogo -> Jogo
-atualizaEscavadora = undefined
+atualizaEscavadora f jogo = jogo {escavadoraJogo = f (escavadoraJogo jogo)} -- escavadoraJogo jogo = jogo->escavadora
+
+-- | Verifica se uma posição do mapa tem chão por baixo, ou se está na última linha
+apoiadoAux :: Posicao -> Mapa -> Bool
+apoiadoAux (linha, coluna) mapa = blocoEm (linha + 1, coluna) mapa /= Just Ar
 
 -- | Verifica se a escavadora está apoiada, ou seja, se /não/ está suspensa no ar.
 --
 -- A escavadora está apoiada se o bloco imediatamente abaixo existir e não for 'Ar', ou se estiver
 -- na última linha do mapa. Só se escava quando se está apoiado.
 apoiado :: Jogo -> Bool
-apoiado = undefined
+apoiado jogo = apoiadoAux (posicaoEscavadora(escavadoraJogo jogo)) (mapaJogo jogo)
 
 -- | Peso total dos minérios transportados pela escavadora.
 --
 -- O peso limita a carga: ver 'capacidadeEscavadora'.
 pesoCarga :: Escavadora -> Peso
-pesoCarga = undefined
+pesoCarga escavadora = sum(map pesoMinerio(cargaEscavadora escavadora))
 
 -- | Valor total dos minérios transportados pela escavadora, ou seja, quanto rende 'Vende'.
 valorCarga :: Escavadora -> Creditos
-valorCarga = undefined
+valorCarga escavadora = sum(map valorMinerio(cargaEscavadora escavadora)) 
 
 -- | A escavadora perde vida, sem nunca ficar com vida negativa. É o que acontece com a 'Lava', com
 -- as explosões e com as quedas.
