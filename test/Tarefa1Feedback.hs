@@ -91,12 +91,15 @@ jogoPequeno = jogoExemplo
   , edificiosJogo = [Edificio Posto (0,0), Edificio Refinaria (0,1), Edificio Oficina (0,3)]
   }
 
+-- | Válido-a loja pode estar vazia
 lojaVazia :: Jogo
 lojaVazia = jogoExemplo { lojaJogo = [] }
 
+-- | Inválido-uma melhoria com preço negativo
 precoNegativo :: Jogo
 precoNegativo = jogoExemplo { lojaJogo = [(-1, Vida 200)] }
 
+-- | Inválidouma melhoria com valor 0(precisa ser positiva)
 melhoriaSemValor :: Jogo
 melhoriaSemValor = jogoExemplo { lojaJogo = [(100, Carga 0)] }
 
