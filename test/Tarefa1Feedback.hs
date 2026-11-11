@@ -91,6 +91,15 @@ jogoPequeno = jogoExemplo
   , edificiosJogo = [Edificio Posto (0,0), Edificio Refinaria (0,1), Edificio Oficina (0,3)]
   }
 
+lojaVazia :: Jogo
+lojaVazia = jogoExemplo { lojaJogo = [] }
+
+precoNegativo :: Jogo
+precoNegativo = jogoExemplo { lojaJogo = [(-1, Vida 200)] }
+
+melhoriaSemValor :: Jogo
+melhoriaSemValor = jogoExemplo { lojaJogo = [(100, Carga 0)] }
+
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes.
 testesTarefa1 :: [Jogo]
 testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
