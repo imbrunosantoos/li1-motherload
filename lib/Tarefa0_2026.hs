@@ -69,13 +69,22 @@ valorCarga escavadora = sum(map valorMinerio(cargaEscavadora escavadora))
 -- | A escavadora perde vida, sem nunca ficar com vida negativa. É o que acontece com a 'Lava', com
 -- as explosões e com as quedas.
 sofreDano :: Int -> Escavadora -> Escavadora
-sofreDano = undefined
+sofreDano dano escavadora = escavadora {vidaEscavadora = max 0 (vidaEscavadora escavadora - dano)}
 
 -- * Edifícios
+
+-- | Procura, numa lista de edifícios, o tipo do primeiro que está na posição dada
+--
+-- Devolve Nothing se nenhum edifício da lista estiver nessa posição
+edificioEmLista :: Posicao -> [Edificio] -> Maybe TipoEdificio
+edificioEmLista _ [] = Nothing
+edificioEmLista p (x:xs)
+                | posicaoEdificio x == p = Just (tipoEdificio x)
+                | otherwise = edificioEmLista p xs
 
 -- | Devolve o tipo de edifício numa dada posição, se lá existir algum.
 --
 -- __NB:__ Se houver mais do que um edifício na mesma posição — o que a Tarefa 1 não permite —
 -- devolve o primeiro da lista.
 edificioEm :: Posicao -> Jogo -> Maybe TipoEdificio
-edificioEm = undefined
+edificioEm p jogo = edificioEmLista p (edificiosJogo jogo)
