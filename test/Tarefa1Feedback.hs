@@ -50,9 +50,26 @@ jogoExemplo = Jogo
                , (5000, Broca 3) ]
   }
 
+-- | Mapa pequeno (4x4), para testes focados em um detalhe
+mapaPequeno :: Mapa
+mapaPequeno =
+  [ [Ar,    Ar,    Ar,           Ar   ]
+  , [Terra, Ar,    Rocha,        Terra]
+  , [Terra, Ar,    Minerio Ouro, Lava ]
+  , [Rocha, Terra, Terra,        Terra]
+  ]
+
+-- | Jogo válido no mapa pequeno-a escavadora está em (2,1), pousada em terra
+jogoPequeno :: Jogo
+jogoPequeno = jogoExemplo
+  { mapaJogo = mapaPequeno
+  , escavadoraJogo = escavadoraExemplo { posicaoEscavadora = (2,1) }
+  , edificiosJogo = [Edificio Posto (0,0), Edificio Refinaria (0,1), Edificio Oficina (0,3)]
+  }
+
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes.
 testesTarefa1 :: [Jogo]
-testesTarefa1 = [jogoExemplo]
+testesTarefa1 = [jogoExemplo, jogoPequeno]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
