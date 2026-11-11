@@ -10,6 +10,7 @@ projeto de LI1\/LP1 em 2026\/27.
 module Tarefa0_2026 where
 
 import Labs2026
+import Tarefa0_geral
 
 -- * Mapa
 
@@ -24,19 +25,19 @@ import Labs2026
 -- >>> blocoEm (-1,0) [[Ar],[Terra]]
 -- Nothing
 blocoEm :: Posicao -> Mapa -> Maybe Bloco
-blocoEm = undefined
+blocoEm (linha, coluna) mapa = encontraPosicaoMatriz (linha, coluna) mapa
 
 -- | Substitui o bloco numa dada posição do mapa.
 --
 -- __NB:__ Devolve o próprio mapa se a posição não pertencer ao mapa.
 atualizaBloco :: Posicao -> Bloco -> Mapa -> Mapa
-atualizaBloco = undefined
+atualizaBloco (linha, coluna) bloco mapa = atualizaPosicaoMatriz (linha, coluna) bloco mapa 
 
 -- | Verifica se um bloco é escavável, ou seja, se tem 'durezaBloco'.
 --
 -- __NB:__ 'Ar' e 'Rocha' não são escaváveis.
 eBlocoEscavavel :: Bloco -> Bool
-eBlocoEscavavel = undefined
+eBlocoEscavavel bloco = durezaBloco bloco /= Nothing 
 
 -- * Escavadora
 
