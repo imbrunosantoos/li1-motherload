@@ -36,6 +36,7 @@ semRepetidos (x:xs)
             | notElem x xs = semRepetidos xs
             | otherwise = False
 
+-- | Verifica se há pelo menos um edifício de cada tipo 
 temTodosTipos :: [TipoEdificio] -> Bool
 temTodosTipos tipos = elem Posto tipos 
                 && elem Refinaria tipos
