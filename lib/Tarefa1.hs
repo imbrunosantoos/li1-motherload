@@ -29,6 +29,10 @@ mapaValido = undefined
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
 
+edificioNaSuperficie :: Mapa -> Edificio -> Bool
+edificioNaSuperficie mapa edificio =  fst(posicaoEdificio edificio) == 0 
+                                    && ePosicaoMatrizValida (posicaoEdificio edificio) mapa
+               
 -- | Verifica se uma lista não tem elementos repetidos 
 semRepetidos :: [Posicao] -> Bool
 semRepetidos [] = True
