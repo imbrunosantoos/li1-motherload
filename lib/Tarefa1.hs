@@ -29,6 +29,7 @@ mapaValido = undefined
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
 
+-- | Verifica se uma lista não tem elementos repetidos 
 semRepetidos :: [Posicao] -> Bool
 semRepetidos [] = True
 semRepetidos (x:xs) 
