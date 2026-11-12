@@ -29,6 +29,12 @@ mapaValido = undefined
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
 
+semRepetidos :: [Posicao] -> Bool
+semRepetidos [] = True
+semRepetidos (x:xs) 
+            | notElem x xs = semRepetidos xs
+            | otherwise = False
+
 edificiosValidos :: Mapa -> [Edificio] -> Bool
 edificiosValidos = undefined
 
