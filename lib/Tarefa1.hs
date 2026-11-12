@@ -29,6 +29,7 @@ mapaValido = undefined
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
 
+-- | Verifica se um edifício está na superfície (linha 0) e dentro do mapa
 edificioNaSuperficie :: Mapa -> Edificio -> Bool
 edificioNaSuperficie mapa edificio =  fst(posicaoEdificio edificio) == 0 
                                     && ePosicaoMatrizValida (posicaoEdificio edificio) mapa
