@@ -36,6 +36,11 @@ semRepetidos (x:xs)
             | notElem x xs = semRepetidos xs
             | otherwise = False
 
+temTodosTipos :: [TipoEdificio] -> Bool
+temTodosTipos tipos = elem Posto tipos 
+                && elem Refinaria tipos
+                && elem Oficina tipos
+
 edificiosValidos :: Mapa -> [Edificio] -> Bool
 edificiosValidos = undefined
 
