@@ -29,10 +29,12 @@ mapaValido = undefined
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
 
--- | Verifica se um edifício está na superfície (linha 0) e dentro do mapa
-edificioNaSuperficie :: Mapa -> Edificio -> Bool
-edificioNaSuperficie mapa edificio =  fst(posicaoEdificio edificio) == 0 
-                                    && ePosicaoMatrizValida (posicaoEdificio edificio) mapa
+-- | Verifica se todos os edifícios estão na superfície e dentro do mapa 
+todosNaSuperficie :: Mapa -> [Edificio] -> Bool
+todosNaSuperficie _ [] = True
+todosNaSuperficie mapa (e:es) = edificioNaSuperficie mapa e 
+                              && todosNaSuperficie mapa es
+
                
 -- | Verifica se uma lista não tem elementos repetidos 
 semRepetidos :: [Posicao] -> Bool
@@ -47,8 +49,12 @@ temTodosTipos tipos = elem Posto tipos
                 && elem Refinaria tipos
                 && elem Oficina tipos
 
+-- | Regra 3-todos os edifícios estão na superfície, 
+--  não há dois na mesma posição e há pelo menos um de cada tipo
 edificiosValidos :: Mapa -> [Edificio] -> Bool
-edificiosValidos = undefined
+edificiosValidos mapa edificios  = temTodosTipos (map tipoEdificio edificios)
+                                && semRepetidos (map posicaoEdificio edificios)
+                                && todosNaSuperficie mapa edificios
 
 objetosValidos :: Mapa -> [Objeto] -> Bool
 objetosValidos = undefined
