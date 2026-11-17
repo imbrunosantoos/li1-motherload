@@ -23,8 +23,15 @@ validaJogo jogo = mapaValido (mapaJogo jogo)
 
 -- * Funções auxiliares
 
+-- | Verifica se uma linha do mapa é toda Ar
+linhaDeAr :: [Bloco] -> Bool
+linhaDeAr [] = True
+linhaDeAr (x:xs)
+          | x == Ar = linhaDeAr xs
+          | otherwise = False
+
 mapaValido :: Mapa -> Bool
-mapaValido = undefined
+mapaValido mapa = mapa /= [] && eMatrizValida mapa && linhaDeAr(head mapa)
 
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
