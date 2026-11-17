@@ -69,10 +69,12 @@ edificiosValidos mapa edificios  = temTodosTipos (map tipoEdificio edificios)
                                 && semRepetidos (map posicaoEdificio edificios)
                                 && todosNaSuperficie mapa edificios
 
+-- | Verifica se uma dinamite está num bloco Ar dentro do mapa e tem o temporizador >= 0
 dinamiteValida :: Mapa -> Objeto -> Bool
 dinamiteValida mapa dinamite = blocoEm(posicaoDinamite dinamite) mapa == Just Ar 
                              && tempoDinamite dinamite >= 0
 
+-- | Regra 4-todas as dinamites do jogo são válidas
 objetosValidos :: Mapa -> [Objeto] -> Bool
 objetosValidos _ [] = True
 objetosValidos mapa (x:xs) 
