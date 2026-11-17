@@ -69,8 +69,15 @@ edificiosValidos mapa edificios  = temTodosTipos (map tipoEdificio edificios)
                                 && semRepetidos (map posicaoEdificio edificios)
                                 && todosNaSuperficie mapa edificios
 
+dinamiteValida :: Mapa -> Objeto -> Bool
+dinamiteValida mapa dinamite = blocoEm(posicaoDinamite dinamite) mapa == Just Ar 
+                             && tempoDinamite dinamite >= 0
+
 objetosValidos :: Mapa -> [Objeto] -> Bool
-objetosValidos = undefined
+objetosValidos _ [] = True
+objetosValidos mapa (x:xs) 
+                    | dinamiteValida mapa x = objetosValidos mapa xs
+                    | otherwise = False
 
 -- | Regra 5: os créditos não podem ser negativos.
 creditosValidos :: Creditos -> Bool
