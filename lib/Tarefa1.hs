@@ -35,7 +35,22 @@ mapaValido :: Mapa -> Bool
 mapaValido mapa = mapa /= [] && eMatrizValida mapa && linhaDeAr(head mapa)
 
 escavadoraValida :: Mapa -> Escavadora -> Bool
-escavadoraValida = undefined
+escavadoraValida mapa escavadora = posicaoOk && combustivelEVidaOk && capacidadesOk
+                                && brocaOk && cargaOk && contadoresOk && vooOk
+    where 
+        posicaoOk = blocoEm(posicaoEscavadora escavadora)mapa == Just Ar 
+        combustivelEVidaOk = combustivelEscavadora escavadora <= depositoEscavadora escavadora
+                            && combustivelEscavadora escavadora >= 0
+                            && vidaEscavadora escavadora >= 0 
+                            && vidaEscavadora escavadora <= vidaMaximaEscavadora escavadora
+        capacidadesOk      = depositoEscavadora escavadora > 0
+                            && vidaMaximaEscavadora escavadora > 0
+                            && capacidadeEscavadora escavadora > 0
+        brocaOk            = brocaEscavadora escavadora >= 1
+        cargaOk            = capacidadeEscavadora escavadora >= (pesoCarga escavadora)
+        contadoresOk       = quedaEscavadora escavadora >= 0 
+                            && dinamitesEscavadora escavadora >= 0
+        vooOk              = if (voandoEscavadora escavadora) then quedaEscavadora escavadora == 0 else True
 
 -- | Verifica se um edifício está na superfície (linha 0) e dentro do mapa
 edificioNaSuperficie :: Mapa -> Edificio -> Bool
