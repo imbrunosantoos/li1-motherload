@@ -34,6 +34,9 @@ linhaDeAr (x:xs)
 mapaValido :: Mapa -> Bool
 mapaValido mapa = mapa /= [] && eMatrizValida mapa && linhaDeAr(head mapa)
 
+-- | Regra 2-a escavadora está num bloco Ar dentro do mapa, os valores respeitam os
+-- limites (combustível, vida, capacidades, broca, carga, contadores) e, se está a voar,
+-- a queda é 0.
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida mapa escavadora = posicaoOk && combustivelEVidaOk && capacidadesOk
                                 && brocaOk && cargaOk && contadoresOk && vooOk
