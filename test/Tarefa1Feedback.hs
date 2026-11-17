@@ -142,6 +142,18 @@ mapaNaoRetangular = jogoPequeno
                ]
   }
 
+-- | Inválido uma dinamite enterrada em Terra, em (5,3)
+dinamiteEmTerra :: Jogo
+dinamiteEmTerra = jogoExemplo { objetosJogo = [Dinamite (5,3) 2] }
+
+-- | Inválido- uma dinamite com o temporizador negativo
+dinamiteTempoNegativo :: Jogo
+dinamiteTempoNegativo = jogoExemplo { objetosJogo = [Dinamite (3,3) (-1)] }
+
+-- | Válido-dinamite com tempo 0, na mesma posição da escavadora
+dinamiteNaEscavadora :: Jogo
+dinamiteNaEscavadora = jogoExemplo { objetosJogo = [Dinamite (4,3) 0] }
+
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes
 testesTarefa1 :: [Jogo]
 testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
@@ -149,7 +161,8 @@ testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
                 edificioForaDaSuperficie, edificioForaDoMapa, edificiosSobrepostos,
                 semOficina, doisPostos, mapaVazio,
                 mapaNaoRetangular, lojaVazia, precoNegativo,
-                melhoriaSemValor]
+                melhoriaSemValor, dinamiteEmTerra, dinamiteNaEscavadora,
+                dinamiteTempoNegativo]
 
 
 
