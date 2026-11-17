@@ -128,12 +128,29 @@ doisPostos :: Jogo
 doisPostos = jogoExemplo
   { edificiosJogo = [Edificio Posto (0,2), Edificio Posto (0,4), Edificio Refinaria (0,6), Edificio Oficina (0,10)] }
 
+-- | Inválido-o mapa é vazio 
+mapaVazio :: Jogo
+mapaVazio = jogoPequeno { mapaJogo = [] }
+
+-- | Inválido- a linha 1 tem 3 colunas e as outras tem 4
+mapaNaoRetangular :: Jogo
+mapaNaoRetangular = jogoPequeno
+  { mapaJogo = [ [Ar,    Ar,    Ar,           Ar   ]
+               , [Terra, Ar,    Rocha              ]
+               , [Terra, Ar,    Minerio Ouro, Lava ]
+               , [Rocha, Terra, Terra,        Terra]
+               ]
+  }
+
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes
 testesTarefa1 :: [Jogo]
 testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
                 escavadoraEmTerra, creditosNegativos, superficieComTerra,
                 edificioForaDaSuperficie, edificioForaDoMapa, edificiosSobrepostos,
-                semOficina, doisPostos]
+                semOficina, doisPostos, mapaVazio,
+                mapaNaoRetangular, ]
+
+
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO (
