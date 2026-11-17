@@ -148,12 +148,13 @@ testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
                 escavadoraEmTerra, creditosNegativos, superficieComTerra,
                 edificioForaDaSuperficie, edificioForaDoMapa, edificiosSobrepostos,
                 semOficina, doisPostos, mapaVazio,
-                mapaNaoRetangular, ]
+                mapaNaoRetangular, lojaVazia, precoNegativo,
+                melhoriaSemValor]
 
 
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
-main :: IO (
+main :: IO ()
 main = do
   resultados <- mapM (runTest . validaJogo) testesTarefa1
   runFeedback (T1 testesTarefa1 resultados)

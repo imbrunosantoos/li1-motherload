@@ -30,12 +30,17 @@ linhaDeAr (x:xs)
           | x == Ar = linhaDeAr xs
           | otherwise = False
 
--- | Regra 1: o mapa não é vazio, é uma matriz quadrada e a superfície (linha 0) é toda Ar
+-- | Regra 1: o mapa não é vazio, é uma grelha(todas as linhas do mesmo tamanho) e a superfície (linha 0) é toda Ar
 mapaValido :: Mapa -> Bool
 mapaValido mapa = mapa /= [] && eMatrizValida mapa && linhaDeAr(head mapa)
 
 escavadoraValida :: Mapa -> Escavadora -> Bool
 escavadoraValida = undefined
+
+-- | Verifica se um edifício está na superfície (linha 0) e dentro do mapa
+edificioNaSuperficie :: Mapa -> Edificio -> Bool
+edificioNaSuperficie mapa edificio = fst (posicaoEdificio edificio) == 0
+                                  && ePosicaoMatrizValida (posicaoEdificio edificio) mapa
 
 -- | Verifica se todos os edifícios estão na superfície e dentro do mapa 
 todosNaSuperficie :: Mapa -> [Edificio] -> Bool
