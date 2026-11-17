@@ -30,6 +30,7 @@ linhaDeAr (x:xs)
           | x == Ar = linhaDeAr xs
           | otherwise = False
 
+-- | Regra 1: o mapa não é vazio, é uma matriz quadrada e a superfície (linha 0) é toda Ar
 mapaValido :: Mapa -> Bool
 mapaValido mapa = mapa /= [] && eMatrizValida mapa && linhaDeAr(head mapa)
 
