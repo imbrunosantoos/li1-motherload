@@ -59,6 +59,10 @@ mapaPequeno =
   , [Rocha, Terra, Terra,        Terra]
   ]
 
+-- | O jogo do exemplo, com outra escavadora
+comEscavadora :: Escavadora -> Jogo
+comEscavadora esc = jogoExemplo { escavadoraJogo = esc }
+
 -- * Testes
 
 -- | Válido- combustível exatamente 0 
@@ -154,6 +158,54 @@ dinamiteTempoNegativo = jogoExemplo { objetosJogo = [Dinamite (3,3) (-1)] }
 dinamiteNaEscavadora :: Jogo
 dinamiteNaEscavadora = jogoExemplo { objetosJogo = [Dinamite (4,3) 0] }
 
+-- | Inválido: a escavadora está na linha 7, fora do mapa (regra 2a)
+escavadoraForaDoMapa :: Jogo
+escavadoraForaDoMapa = comEscavadora (escavadoraExemplo { posicaoEscavadora = (7,3) })
+
+-- | Inválido: mais combustível do que o depósito (regra 2b)
+combustivelAcimaDoDeposito :: Jogo
+combustivelAcimaDoDeposito = comEscavadora (escavadoraExemplo { combustivelEscavadora = 250 })
+
+-- | Inválido: vida negativa (regra 2b)
+vidaNegativa :: Jogo
+vidaNegativa = comEscavadora (escavadoraExemplo { vidaEscavadora = -1 })
+
+-- | Inválido: depósito com capacidade 0 (regra 2c) O combustível também é 0, para a 2b continuar válida
+depositoZero :: Jogo
+depositoZero = comEscavadora (escavadoraExemplo { depositoEscavadora = 0, combustivelEscavadora = 0 })
+
+-- | Inválido: capacidade de carga 0 (regra 2c)
+capacidadeZero :: Jogo
+capacidadeZero = comEscavadora (escavadoraExemplo { capacidadeEscavadora = 0 })
+
+-- | Inválido: broca de nível 0 (regra 2d)
+brocaZero :: Jogo
+brocaZero = comEscavadora (escavadoraExemplo { brocaEscavadora = 0 })
+
+-- | Inválido: 6 Ouros pesam 24, acima da capacidade 20 (regra 2e)
+cargaAcimaDaCapacidade :: Jogo
+cargaAcimaDaCapacidade = comEscavadora (escavadoraExemplo { cargaEscavadora = replicate 6 Ouro })
+
+-- | Válido no limite: 5 Ouros pesam 20, exatamente a capacidade (regra 2e)
+cargaNoLimite :: Jogo
+cargaNoLimite = comEscavadora (escavadoraExemplo { cargaEscavadora = replicate 5 Ouro })
+
+-- | Inválido: queda negativa (regra 2f)
+quedaNegativa :: Jogo
+quedaNegativa = comEscavadora (escavadoraExemplo { quedaEscavadora = -1 })
+
+-- | Inválido: número de dinamites negativo (regra 2f)
+dinamitesNegativas :: Jogo
+dinamitesNegativas = comEscavadora (escavadoraExemplo { dinamitesEscavadora = -1 })
+
+-- | Inválido: a voar com queda 2 (regra 2g)
+voarComQueda :: Jogo
+voarComQueda = comEscavadora (escavadoraExemplo { voandoEscavadora = True, quedaEscavadora = 2 })
+
+-- | Válido: a voar com queda 0 (regra 2g)
+voarSemQueda :: Jogo
+voarSemQueda = comEscavadora (escavadoraExemplo { voandoEscavadora = True })
+
 -- | Os testes da Tarefa 1, que são avaliados pelos docentes
 testesTarefa1 :: [Jogo]
 testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
@@ -162,7 +214,11 @@ testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
                 semOficina, doisPostos, mapaVazio,
                 mapaNaoRetangular, lojaVazia, precoNegativo,
                 melhoriaSemValor, dinamiteEmTerra, dinamiteNaEscavadora,
-                dinamiteTempoNegativo]
+                dinamiteTempoNegativo, voarSemqueda, voarComQueda,
+                dinamitesNegativas, quedaNegativa, cargaNoLimite,
+                cargaAcimaDaCapacidade, brocaZero, capacidadeZero,
+                depositoZero, vidaNegativa, combustivelAcimaDoDeposito,
+                escavadoraForaDoMapa]
 
 
 
