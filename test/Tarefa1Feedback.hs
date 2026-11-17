@@ -99,17 +99,44 @@ lojaVazia = jogoExemplo { lojaJogo = [] }
 precoNegativo :: Jogo
 precoNegativo = jogoExemplo { lojaJogo = [(-1, Vida 200)] }
 
--- | Inválidouma melhoria com valor 0(precisa ser positiva)
+-- | Inválido- uma melhoria com valor 0(precisa ser positiva)
 melhoriaSemValor :: Jogo
 melhoriaSemValor = jogoExemplo { lojaJogo = [(100, Carga 0)] }
 
--- | Os testes da Tarefa 1, que são avaliados pelos docentes.
+-- | Inválido-o Posto está na linha 1, e não na superfície 
+edificioForaDaSuperficie :: Jogo
+edificioForaDaSuperficie = jogoExemplo
+  { edificiosJogo = [Edificio Posto (1,3), Edificio Refinaria (0,6), Edificio Oficina (0,10)] }
+
+-- | Inválido-a Oficina está na linha 0, mas na coluna 13, fora do mapa
+edificioForaDoMapa :: Jogo
+edificioForaDoMapa = jogoExemplo
+  { edificiosJogo = [Edificio Posto (0,2), Edificio Refinaria (0,6), Edificio Oficina (0,13)] }
+
+-- | Inválido-o Posto e a Refinaria estão na mesma posição 
+edificiosSobrepostos :: Jogo
+edificiosSobrepostos = jogoExemplo
+  { edificiosJogo = [Edificio Posto (0,2), Edificio Refinaria (0,2), Edificio Oficina (0,10)] }
+
+-- | Inválido-falta a Oficina
+semOficina :: Jogo
+semOficina = jogoExemplo
+  { edificiosJogo = [Edificio Posto (0,2), Edificio Refinaria (0,6)] }
+
+-- | Válido-dois Postos, em posições diferentes
+doisPostos :: Jogo
+doisPostos = jogoExemplo
+  { edificiosJogo = [Edificio Posto (0,2), Edificio Posto (0,4), Edificio Refinaria (0,6), Edificio Oficina (0,10)] }
+
+-- | Os testes da Tarefa 1, que são avaliados pelos docentes
 testesTarefa1 :: [Jogo]
 testesTarefa1 = [jogoExemplo, jogoPequeno, semCombustivel,
-                escavadoraEmTerra, creditosNegativos, superficieComTerra]
+                escavadoraEmTerra, creditosNegativos, superficieComTerra,
+                edificioForaDaSuperficie, edificioForaDoMapa, edificiosSobrepostos,
+                semOficina, doisPostos]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
-main :: IO ()
+main :: IO (
 main = do
   resultados <- mapM (runTest . validaJogo) testesTarefa1
   runFeedback (T1 testesTarefa1 resultados)
