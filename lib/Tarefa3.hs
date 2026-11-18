@@ -73,7 +73,17 @@ gravidadeEscavadora jogo
                   | not (apoiado jogo) = atualizaEscavadora caiUmaLinha  jogo
                   | otherwise = atualizaEscavadora aterra jogo
 
+caiDinamite :: Mapa -> Objeto -> Objeto
+caiDinamite mapa objeto 
+          | apoiadoAux (posicaoDinamite objeto) mapa = objeto
+          | otherwise = objeto {posicaoDinamite = movePosicao Baixo (posicaoDinamite objeto)}
+
+caiDinamites :: Mapa -> [Objeto] -> [Objeto]
+caiDinamites _ [] = []
+caiDinamites mapa (x:xs) = caiDinamite mapa x:caiDinamites mapa xs 
+
 {-| A gravidade num 'Ticks'.
 -}
 gravidade :: Jogo -> Jogo
-gravidade j = gravidadeEscavadora j
+gravidade j = gravidadeEscavadora j{objetosJogo = caiDinamites (mapaJogo j) (objetosJogo j)}
+
