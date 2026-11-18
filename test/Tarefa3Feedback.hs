@@ -52,9 +52,38 @@ jogoExemplo = Jogo
 comEscavadora :: Escavadora -> Jogo
 comEscavadora esc = jogoExemplo { escavadoraJogo = esc }
 
+
+-- * Testes da perdeuJogo
+
+-- | Perde-a escavadora ficou sem vida
+escavadoraSemVida :: Jogo
+escavadoraSemVida = comEscavadora (escavadoraExemplo { vidaEscavadora = 0 })
+
+-- | Perde- sem combustível em (4,3), longe do 'Posto'
+semCombustivelLonge :: Jogo
+semCombustivelLonge = comEscavadora (escavadoraExemplo { combustivelEscavadora = 0 })
+
+-- | Perde- no 'Posto' sem combustível e sem créditos para abastecer
+postoSemCreditos :: Jogo
+postoSemCreditos = comEscavadora (escavadoraExemplo { posicaoEscavadora = (0,2), combustivelEscavadora = 0 })
+
+-- | Não perde-no 'Posto' sem combustível, mas com 1 crédito, que chega para abastecer
+postoComCredito :: Jogo
+postoComCredito = postoSemCreditos { creditosJogo = 1 }
+
+-- | Perde-na 'Refinaria' sem combustível, os créditos não servem, porque não é o 'Posto'
+refinariaSemCombustivel :: Jogo
+refinariaSemCombustivel = (comEscavadora (escavadoraExemplo { posicaoEscavadora = (0,6), combustivelEscavadora = 0 })) { creditosJogo = 1000 }
+
+-- | Não perde-o combustível é igual ao 'custoMovimento', o que ainda chega para um movimento
+combustivelNoLimite :: Jogo
+combustivelNoLimite = comEscavadora (escavadoraExemplo { combustivelEscavadora = 1 })
+
+
 -- | Os testes da Tarefa 3, que são avaliados pelos docentes.
 testesTarefa3 :: [Jogo]
-testesTarefa3 = []
+testesTarefa3 = [ escavadoraSemVida, semCombustivelLonge, postoSemCreditos,
+                 postoComCredito, refinariaSemCombustivel , combustivelNoLimite]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
