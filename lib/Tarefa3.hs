@@ -33,8 +33,8 @@ podeAbastecer jogo = edificioEm(posicaoEscavadora(escavadoraJogo jogo))jogo == J
 -}
 perdeuJogo :: Jogo -> Bool
 perdeuJogo j = semVida (escavadoraJogo j)
-              && faltaCombustivel (escavadoraJogo j)
-              && not (podeAbastecer j)
+              || faltaCombustivel (escavadoraJogo j)
+              || not (podeAbastecer j)
 
             
 
