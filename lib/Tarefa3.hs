@@ -106,6 +106,16 @@ explode :: Jogo -> Objeto -> Jogo
 explode jogo dinamite = jogo { mapaJogo       = destroiBlocos (mapaJogo jogo) (vizinhancaPosicao raioDinamite (posicaoDinamite dinamite))
                              , escavadoraJogo = danificaEscavadora (posicaoDinamite dinamite) (escavadoraJogo jogo) }
 
+explodeTodas :: Jogo -> [Objeto] -> Jogo 
+explodeTodas jogo [] = jogo
+explodeTodas jogo (x:xs) = explodeTodas(explode jogo x) xs
+
+avancaObjetos :: Jogo -> Jogo
+avancaObjetos j = jogoExplodido { objetosJogo = ficam descontadas }
+  where
+    descontadas   = descontaTempo (objetosJogo j)
+    jogoExplodido = explodeTodas j (explodem descontadas)
+
 {-| Avança todos os objetos.
 -}
 avancaObjetos :: Jogo -> Jogo
