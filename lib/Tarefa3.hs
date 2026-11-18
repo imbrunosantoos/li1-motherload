@@ -51,6 +51,22 @@ perdeuJogo j = semVida (escavadoraJogo j)
 
 -- * Objetos
 
+descontaTempo :: [Objeto] -> [Objeto]
+descontaTempo [] = []
+descontaTempo (x:xs) = x {tempoDinamite = (tempoDinamite x)-1}:descontaTempo xs
+
+explodem :: [Objeto] -> [Objeto]
+explodem [] = []
+explodem (x:xs) 
+        | tempoDinamite x <= 0 = x:explodem xs
+        | otherwise = explodem xs
+
+ficam :: [Objeto] -> [Objeto]
+ficam [] = []
+ficam (x:xs)
+     | tempoDinamite x > 0 = x:ficam xs
+     | otherwise = ficam xs
+
 {-| Avança todos os objetos.
 -}
 avancaObjetos :: Jogo -> Jogo
