@@ -72,29 +72,40 @@ ficam (x:xs)
      | tempoDinamite x > 0 = x:ficam xs
      | otherwise = ficam xs
 
+-- | Verifica se há um bloco escavável numa posição do mapa
+-- Uma posição fora do mapa dá falsa, o que acontece quando uma explosão chega
+-- à borda do mapa por exemplo
 escavavelEm :: Posicao -> Mapa -> Bool
 escavavelEm p mapa = case blocoEm p mapa of 
   Nothing -> False
   Just b -> eBlocoEscavavel b
 
+-- | Uma explosão atinge um bloco-se for escavável, passa a 'Ar'
+-- A 'Rocha', o 'Ar' e as posições fora do mapa ficam iguais
 destroiBloco :: Mapa -> Posicao -> Mapa
 destroiBloco mapa p
             | escavavelEm p mapa = atualizaBloco p Ar mapa 
             | otherwise = mapa
 
+-- | Aplica a 'destroiBloco' a cada posição da lista, uma de cada vez-o mapa que
+-- sai de uma posição é o que entra na seguinte
 destroiBlocos :: Mapa -> [Posicao] -> Mapa
 destroiBlocos mapa [] = mapa
 destroiBlocos mapa (x:xs) = destroiBlocos (destroiBloco mapa x) xs
 
+-- | A escavadora sofre 'danoDinamite' se estiver a 'raioDinamite' da
+-- explosão, medido com a 'distanciaChebyshev', senão fica igual
 danificaEscavadora :: Posicao -> Escavadora -> Escavadora
 danificaEscavadora p escavadora 
                   | distanciaChebyshev (posicaoEscavadora escavadora) p <= raioDinamite = sofreDano danoDinamite escavadora  
                   | otherwise = escavadora
 
+-- | Uma dinamite rebenta: os blocos escaváveis no quadrado de raio
+-- à volta dela passam a 'Ar', e a escavadora ao alcance sofre dano
 explode :: Jogo -> Objeto -> Jogo
 explode jogo dinamite = jogo { mapaJogo       = destroiBlocos (mapaJogo jogo) (vizinhancaPosicao raioDinamite (posicaoDinamite dinamite))
                              , escavadoraJogo = danificaEscavadora (posicaoDinamite dinamite) (escavadoraJogo jogo) }
-                             
+
 {-| Avança todos os objetos.
 -}
 avancaObjetos :: Jogo -> Jogo
