@@ -57,33 +57,42 @@ avancaObjetos :: Jogo -> Jogo
 avancaObjetos j = undefined
 
 -- * Gravidade
+
+-- | Vida que a escavadora perde ao aterrar depois de cair 
 danoDaQueda :: Int -> Int
 danoDaQueda queda = max 0 ((queda - alturaQuedaSegura) * danoQueda)
 
+-- | A escavadora cai uma linha-a posição desce um bloco e a queda aumenta 1
 caiUmaLinha :: Escavadora -> Escavadora
 caiUmaLinha escavadora = escavadora { quedaEscavadora =  (quedaEscavadora escavadora)+1
                                     , posicaoEscavadora = movePosicao Baixo(posicaoEscavadora escavadora)}
 
+-- | A escavadora aterra- perde a vida dada pela 'danoDaQueda' da sua queda,
+-- e a queda volta a 0
 aterra :: Escavadora -> Escavadora 
 aterra escavadora = (sofreDano (danoDaQueda(quedaEscavadora escavadora)) escavadora) {quedaEscavadora = 0}
 
+-- | A gravidade aplicada a escavadora- se está a voar, nada muda. se está no ar,
+-- cai uma linha. se está apoiada, aterra 
 gravidadeEscavadora :: Jogo -> Jogo
 gravidadeEscavadora jogo 
                   | voandoEscavadora (escavadoraJogo jogo) = jogo
                   | not (apoiado jogo) = atualizaEscavadora caiUmaLinha  jogo
                   | otherwise = atualizaEscavadora aterra jogo
 
+-- | Uma dinamite com 'Ar' por baixo cai uma linha, se estiver apoiada, fica onde está
 caiDinamite :: Mapa -> Objeto -> Objeto
 caiDinamite mapa objeto 
           | apoiadoAux (posicaoDinamite objeto) mapa = objeto
           | otherwise = objeto {posicaoDinamite = movePosicao Baixo (posicaoDinamite objeto)}
 
+-- | Aplica a 'caiDinamite' a todas as dinamites da lista
 caiDinamites :: Mapa -> [Objeto] -> [Objeto]
 caiDinamites _ [] = []
 caiDinamites mapa (x:xs) = caiDinamite mapa x:caiDinamites mapa xs 
 
-{-| A gravidade num 'Ticks'.
--}
+-- | A gravidade num 'Ticks'- primeiro caem as dinamites e depois a escavadora. 
+-- As dinamites caem mesmo com a escavadora a voar
 gravidade :: Jogo -> Jogo
 gravidade j = gravidadeEscavadora j{objetosJogo = caiDinamites (mapaJogo j) (objetosJogo j)}
 
