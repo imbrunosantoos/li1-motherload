@@ -51,16 +51,21 @@ perdeuJogo j = semVida (escavadoraJogo j)
 
 -- * Objetos
 
+-- | Desconta um 'Ticks' ao temporizador de cada dinamite, as posições não mudam
 descontaTempo :: [Objeto] -> [Objeto]
 descontaTempo [] = []
 descontaTempo (x:xs) = x {tempoDinamite = (tempoDinamite x)-1}:descontaTempo xs
 
+-- | As dinamites que rebentam neste tick-as que têm o temporizador a 0 ou menos,
+-- depois de descontado com a 'descontaTempo'
 explodem :: [Objeto] -> [Objeto]
 explodem [] = []
 explodem (x:xs) 
         | tempoDinamite x <= 0 = x:explodem xs
         | otherwise = explodem xs
 
+-- | As dinamites que continuam no jogo-as que ainda tem o temporizador acima de 0
+-- É o complemento da 'explodem'
 ficam :: [Objeto] -> [Objeto]
 ficam [] = []
 ficam (x:xs)
