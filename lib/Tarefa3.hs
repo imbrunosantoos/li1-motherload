@@ -9,6 +9,7 @@ Módulo para a realização da Tarefa 3 de LI1\/LP1 em 2026\/27.
 module Tarefa3 where
 
 import Labs2026
+import Tarefa0_2026
 
 -- | Função principal da Tarefa 3. Avança o jogo um 'Ticks'.
 avancaTempo :: Jogo -> Jogo
@@ -18,10 +19,24 @@ avancaTempo j
 
 -- * Fim do jogo
 
+semVida :: Escavadora -> Bool
+semVida escavadora = vidaEscavadora escavadora == 0
+
+faltaCombustivel :: Escavadora -> Bool
+faltaCombustivel escavadora = combustivelEscavadora escavadora < custoMovimento
+
+podeAbastecer :: Jogo -> Bool
+podeAbastecer jogo = edificioEm(posicaoEscavadora(escavadoraJogo jogo))jogo == Just Posto
+                    && creditosJogo jogo >=((custoMovimento - combustivelEscavadora(escavadoraJogo jogo))* precoCombustivel) 
+
 {- | Se o jogo deve terminar ou não.
 -}
 perdeuJogo :: Jogo -> Bool
-perdeuJogo j = undefined
+perdeuJogo j = semVida (escavadoraJogo j)
+              && faltaCombustivel (escavadoraJogo j)
+              && not (podeAbastecer j)
+
+            
 
 -- * Objetos
 
