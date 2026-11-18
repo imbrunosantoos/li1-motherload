@@ -10,6 +10,7 @@ module Tarefa3 where
 
 import Labs2026
 import Tarefa0_2026
+import Tarefa0_geral
 
 -- | Função principal da Tarefa 3. Avança o jogo um 'Ticks'.
 avancaTempo :: Jogo -> Jogo
@@ -56,8 +57,23 @@ avancaObjetos :: Jogo -> Jogo
 avancaObjetos j = undefined
 
 -- * Gravidade
+danoDaQueda :: Int -> Int
+danoDaQueda queda = max 0 ((queda - alturaQuedaSegura) * danoQueda)
+
+caiUmaLinha :: Escavadora -> Escavadora
+caiUmaLinha escavadora = escavadora { quedaEscavadora =  (quedaEscavadora escavadora)+1
+                                    , posicaoEscavadora = movePosicao Baixo(posicaoEscavadora escavadora)}
+
+aterra :: Escavadora -> Escavadora 
+aterra escavadora = (sofreDano (danoDaQueda(quedaEscavadora escavadora)) escavadora) {quedaEscavadora = 0}
+
+gravidadeEscavadora :: Jogo -> Jogo
+gravidadeEscavadora jogo 
+                  | voandoEscavadora (escavadoraJogo jogo) = jogo
+                  | not (apoiado jogo) = atualizaEscavadora caiUmaLinha  jogo
+                  | otherwise = atualizaEscavadora aterra jogo
 
 {-| A gravidade num 'Ticks'.
 -}
 gravidade :: Jogo -> Jogo
-gravidade j = undefined
+gravidade j = gravidadeEscavadora j
