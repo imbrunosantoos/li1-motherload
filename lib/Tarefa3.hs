@@ -120,11 +120,6 @@ avancaObjetos j = jogoExplodido { objetosJogo = ficam descontadas }
     descontadas   = descontaTempo (objetosJogo j)
     jogoExplodido = explodeTodas j (explodem descontadas)
 
-{-| Avança todos os objetos.
--}
-avancaObjetos :: Jogo -> Jogo
-avancaObjetos j = undefined
-
 -- * Gravidade
 
 -- | Vida que a escavadora perde ao aterrar depois de cair 
