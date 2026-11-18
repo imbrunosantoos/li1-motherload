@@ -106,10 +106,14 @@ explode :: Jogo -> Objeto -> Jogo
 explode jogo dinamite = jogo { mapaJogo       = destroiBlocos (mapaJogo jogo) (vizinhancaPosicao raioDinamite (posicaoDinamite dinamite))
                              , escavadoraJogo = danificaEscavadora (posicaoDinamite dinamite) (escavadoraJogo jogo) }
 
+-- | Aplica a 'explode' a cada dinamite da lista, uma de cada vez-o jogo que sai
+-- de uma explosão é o que entra na seguinte
 explodeTodas :: Jogo -> [Objeto] -> Jogo 
 explodeTodas jogo [] = jogo
 explodeTodas jogo (x:xs) = explodeTodas(explode jogo x) xs
 
+-- | Avança todos os objetos num 'Ticks'- desconta o temporizador de cada dinamite
+-- faz rebentar as que chegaram a 0 ou menos e deixa no jogo só as que ainda não rebentaram 
 avancaObjetos :: Jogo -> Jogo
 avancaObjetos j = jogoExplodido { objetosJogo = ficam descontadas }
   where
