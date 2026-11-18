@@ -72,6 +72,29 @@ ficam (x:xs)
      | tempoDinamite x > 0 = x:ficam xs
      | otherwise = ficam xs
 
+escavavelEm :: Posicao -> Mapa -> Bool
+escavavelEm p mapa = case blocoEm p mapa of 
+  Nothing -> False
+  Just b -> eBlocoEscavavel b
+
+destroiBloco :: Mapa -> Posicao -> Mapa
+destroiBloco mapa p
+            | escavavelEm p mapa = atualizaBloco p Ar mapa 
+            | otherwise = mapa
+
+destroiBlocos :: Mapa -> [Posicao] -> Mapa
+destroiBlocos mapa [] = mapa
+destroiBlocos mapa (x:xs) = destroiBlocos (destroiBloco mapa x) xs
+
+danificaEscavadora :: Posicao -> Escavadora -> Escavadora
+danificaEscavadora p escavadora 
+                  | distanciaChebyshev (posicaoEscavadora escavadora) p <= raioDinamite = sofreDano danoDinamite escavadora  
+                  | otherwise = escavadora
+
+explode :: Jogo -> Objeto -> Jogo
+explode jogo dinamite = jogo { mapaJogo       = destroiBlocos (mapaJogo jogo) (vizinhancaPosicao raioDinamite (posicaoDinamite dinamite))
+                             , escavadoraJogo = danificaEscavadora (posicaoDinamite dinamite) (escavadoraJogo jogo) }
+                             
 {-| Avança todos os objetos.
 -}
 avancaObjetos :: Jogo -> Jogo
