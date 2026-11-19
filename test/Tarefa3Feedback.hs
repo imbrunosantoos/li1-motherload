@@ -68,7 +68,7 @@ jogoPequeno = jogoExemplo
   , escavadoraJogo = escavadoraExemplo { posicaoEscavadora = (2,1) }
   , edificiosJogo = [Edificio Posto (0,0), Edificio Refinaria (0,1), Edificio Oficina (0,3)]
   }
-  
+
 -- * Testes da perdeuJogo
 
 -- | Perde-a escavadora ficou sem vida
@@ -95,11 +95,62 @@ refinariaSemCombustivel = (comEscavadora (escavadoraExemplo { posicaoEscavadora 
 combustivelNoLimite :: Jogo
 combustivelNoLimite = comEscavadora (escavadoraExemplo { combustivelEscavadora = 1 })
 
+-- * Testes da gravidade
+
+-- | A voar- não cai, mas a dinamite em (3,3) cai para (4,3) e fica com 2
+escavadoraAVoar :: Jogo
+escavadoraAVoar = (comEscavadora (escavadoraExemplo { posicaoEscavadora = (2,3), voandoEscavadora = True })) { objetosJogo = [Dinamite (3,3) 3] }
+
+-- | No ar e sem voar- cai uma linha e a queda fica 1
+escavadoraNoAr :: Jogo
+escavadoraNoAr = comEscavadora (escavadoraExemplo { posicaoEscavadora = (2,3) })
+
+-- | Aterra com queda 2- não perde vida
+aterraSemDano :: Jogo
+aterraSemDano = comEscavadora (escavadoraExemplo { quedaEscavadora = 2 })
+
+-- | Aterra com queda 4- perde 20 de vida
+aterraComDano :: Jogo
+aterraComDano = comEscavadora (escavadoraExemplo { quedaEscavadora = 4 })
+
+-- * Testes das dinamites
+
+-- | Dinamite a contar- tem terra por baixo, não cai e o tempo passa de 3 para 2
+dinamiteAContar :: Jogo
+dinamiteAContar = jogoExemplo { objetosJogo = [Dinamite (4,3) 3] }
+
+-- | Explosão em (3,3)- a terra à volta vira ar e a escavadora perde 40
+explosaoComTerra :: Jogo
+explosaoComTerra = jogoExemplo { objetosJogo = [Dinamite (3,3) 1] }
+
+-- | Explosão em (1,3)- a rocha fica e a escavadora está longe, não perde vida
+explosaoComRocha :: Jogo
+explosaoComRocha = jogoExemplo { objetosJogo = [Dinamite (1,3) 1] }
+
+-- | Explosão no mapa pequeno- o ouro em (2,2) perde-se e a rocha fica
+explosaoComMinerio :: Jogo
+explosaoComMinerio = jogoPequeno { objetosJogo = [Dinamite (1,1) 1] }
+
+-- | Duas dinamites no mesmo tick- a escavadora apanha as duas e perde 80
+duasDinamites :: Jogo
+duasDinamites = jogoExemplo { objetosJogo = [Dinamite (3,3) 1, Dinamite (4,3) 1] }
+
+-- | Explosão na casa da escavadora- parte a terra por baixo e ela cai logo
+explosaoPorBaixo :: Jogo
+explosaoPorBaixo = jogoExemplo { objetosJogo = [Dinamite (4,3) 1] }
+
+-- | Dinamite com tempo 0- fica com -1 e rebenta já
+dinamiteComTempo0 :: Jogo
+dinamiteComTempo0 = jogoExemplo { objetosJogo = [Dinamite (3,3) 0] }
 
 -- | Os testes da Tarefa 3, que são avaliados pelos docentes.
 testesTarefa3 :: [Jogo]
 testesTarefa3 = [ escavadoraSemVida, semCombustivelLonge, postoSemCreditos,
-                 postoComCredito, refinariaSemCombustivel , combustivelNoLimite]
+                  postoComCredito, refinariaSemCombustivel , combustivelNoLimite,
+                  escavadoraAVoar, escavadoraNoAr, aterraSemDano,
+                  aterraComDano, dinamiteAContar, explosaoComTerra,
+                  explosaoComRocha, explosaoComMinerio, duasDinamites,
+                  explosaoPorBaixo, dinamiteComTempo0]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
