@@ -45,7 +45,8 @@ data Direcao = Cima | Baixo | Esquerda | Direita
 -- >>> eIndiceListaValido (-1) "abc"
 -- False
 eIndiceListaValido :: Int -> [a] -> Bool
-eIndiceListaValido = undefined
+eIndiceListaValido indice lista = indice < length lista 
+                                && indice >=0
 
 -- | Calcula a dimensão de uma matriz.
 --
@@ -57,7 +58,9 @@ eIndiceListaValido = undefined
 -- >>> dimensaoMatriz [[],[]]
 -- (0,0)
 dimensaoMatriz :: Matriz a -> Dimensao
-dimensaoMatriz = undefined
+dimensaoMatriz [] = (0,0)
+dimensaoMatriz ([]:_) = (0,0)
+dimensaoMatriz (x:xs)= (length (x:xs),length x)
 
 -- | Verifica se a posição pertence à matriz.
 --
@@ -77,7 +80,10 @@ ePosicaoMatrizValida = undefined
 -- >>> movePosicao Direita (3,4)
 -- (3,5)
 movePosicao :: Direcao -> Posicao -> Posicao
-movePosicao = undefined
+movePosicao Cima (x,y) = (x-1,y)
+movePosicao Baixo (x,y) = (x+1,y)
+movePosicao Esquerda (x,y) = (x,y-1)
+movePosicao Direita (x,y) = (x,y+1)
 
 -- | Distância de Chebyshev entre duas posições, ou seja, o número de passos necessários para ir
 -- de uma à outra podendo mover-se também na diagonal.
@@ -85,7 +91,7 @@ movePosicao = undefined
 -- >>> distanciaChebyshev (0,0) (1,3)
 -- 3
 distanciaChebyshev :: Posicao -> Posicao -> Int
-distanciaChebyshev = undefined
+distanciaChebyshev (l1,c1) (l2,c2) = max (abs(l1-l2)) (abs(c1-c2))
 
 -- | Todas as posições a uma distância de Chebyshev menor ou igual a um dado raio, incluindo a
 -- própria posição central.
