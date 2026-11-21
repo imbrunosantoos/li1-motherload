@@ -166,6 +166,7 @@ eMatrizValida ([]:_) = False
 eMatrizValida [] = False 
 eMatrizValida (x:xs) = mesmoComprimento (length x) xs
 
+-- | Verifica se todas as linhas de uma lista tem o comprimento dado
 mesmoComprimento :: Int -> [[a]] -> Bool
 mesmoComprimento _ [] = True
 mesmoComprimento num (y:ys) 
