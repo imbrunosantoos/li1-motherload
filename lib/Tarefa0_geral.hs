@@ -69,7 +69,9 @@ dimensaoMatriz (x:xs)= (length (x:xs),length x)
 -- Vamos buscar a linha pedida e vemos se a coluna existe /nessa/ linha, para que a função também
 -- dê a resposta certa se as linhas tiverem tamanhos diferentes.
 ePosicaoMatrizValida :: Posicao -> Matriz a -> Bool
-ePosicaoMatrizValida = undefined
+ePosicaoMatrizValida (l,c) matriz = case encontraIndiceLista l matriz of
+    Nothing -> False
+    Just linha -> eIndiceListaValido c linha
 
 -- | Move uma posição uma unidade no sentido de uma direção.
 --
@@ -115,7 +117,9 @@ vizinhancaPosicao = undefined
 -- >>> encontraIndiceLista 5 "abc"
 -- Nothing
 encontraIndiceLista :: Int -> [a] -> Maybe a
-encontraIndiceLista = undefined
+encontraIndiceLista _ [] = Nothing
+encontraIndiceLista 0 (x:_) = Just x
+encontraIndiceLista i (_:xs) = encontraIndiceLista (i - 1) xs 
 
 -- | Modifica um elemento num dado índice.
 --
@@ -124,19 +128,26 @@ encontraIndiceLista = undefined
 -- >>> atualizaIndiceLista 0 'z' "abc"
 -- "zbc"
 atualizaIndiceLista :: Int -> a -> [a] -> [a]
-atualizaIndiceLista = undefined
+atualizaIndiceLista _ _ [] = []
+atualizaIndiceLista 0 novo (_:xs) = novo:xs
+atualizaIndiceLista i novo (x:xs) = x : atualizaIndiceLista (i-1) novo xs
+
 
 -- | Devolve o elemento numa dada posição de uma matriz.
 --
 -- __NB:__ Devolve @Nothing@ se a posição não existir.
 encontraPosicaoMatriz :: Posicao -> Matriz a -> Maybe a
-encontraPosicaoMatriz = undefined
+encontraPosicaoMatriz (l,c) matriz = case encontraIndiceLista l matriz of
+    Nothing -> Nothing
+    Just linha -> encontraIndiceLista c linha
 
 -- | Modifica um elemento numa dada posição de uma matriz.
 --
 -- __NB:__ Devolve a própria matriz se a posição não existir.
 atualizaPosicaoMatriz :: Posicao -> a -> Matriz a -> Matriz a
-atualizaPosicaoMatriz = undefined
+atualizaPosicaoMatriz (l,c) a matriz = case encontraIndiceLista l matriz of
+    Nothing -> matriz
+    Just linha -> atualizaIndiceLista l (atualizaIndiceLista c a linha) matriz 
 
 -- | Verifica se uma matriz é válida, no sentido em que modela um retângulo.
 --
