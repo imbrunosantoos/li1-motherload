@@ -104,7 +104,11 @@ distanciaChebyshev (l1,c1) (l2,c2) = max (abs(l1-l2)) (abs(c1-c2))
 -- >>> vizinhancaPosicao 1 (0,0)
 -- [(-1,-1),(-1,0),(-1,1),(0,-1),(0,0),(0,1),(1,-1),(1,0),(1,1)]
 vizinhancaPosicao :: Int -> Posicao -> [Posicao]
-vizinhancaPosicao = undefined
+vizinhancaPosicao raio (l,c) = [ (x,y) | x <- linhas, y <- colunas]
+    where 
+        linhas  = [l - raio .. l + raio]
+        colunas = [c - raio .. c + raio]
+
 
 -- * Funções recursivas
 
@@ -158,4 +162,13 @@ atualizaPosicaoMatriz (l,c) a matriz = case encontraIndiceLista l matriz of
 -- >>> eMatrizValida [[1,2],[3]]
 -- False
 eMatrizValida :: Matriz a -> Bool
-eMatrizValida = undefined
+eMatrizValida ([]:_) = False
+eMatrizValida [] = False 
+eMatrizValida (x:xs) = mesmoComprimento (length x) xs
+
+mesmoComprimento :: Int -> [[a]] -> Bool
+mesmoComprimento _ [] = True
+mesmoComprimento num (y:ys) 
+                |  length y == num = mesmoComprimento num ys
+                | otherwise = False
+                           
