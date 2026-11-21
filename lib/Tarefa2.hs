@@ -19,6 +19,7 @@ efetuaJogada :: Jogada -> Jogo -> Jogo
 efetuaJogada Parado        jogo = parado jogo
 efetuaJogada LargaDinamite jogo = largaDinamite jogo
 efetuaJogada Vende         jogo = vende jogo
+efetuaJogada Abastece      jogo = abastece jogo
 efetuaJogada _ jogo = jogo
 
 
@@ -53,3 +54,21 @@ vende jogo
     | otherwise = jogoNovo {creditosJogo = valorCarga(escavadoraJogo jogo) + creditosJogo jogo}
 
   where jogoNovo = atualizaEscavadora esvaziaCarga jogo  
+
+somaCombustivel :: Int -> Escavadora -> Escavadora
+somaCombustivel unidades escavadora = escavadora { combustivelEscavadora = combustivelEscavadora escavadora + unidades }
+
+faltaCombustivel :: Escavadora -> Int
+faltaCombustivel escavadora = depositoEscavadora escavadora - combustivelEscavadora escavadora
+
+unidadesAbastecer :: Jogo -> Int
+unidadesAbastecer jogo = min (faltaCombustivel (escavadoraJogo jogo)) (creditosJogo jogo `div` precoCombustivel)
+
+pagaCreditos :: Int -> Jogo -> Jogo
+pagaCreditos preco jogo = jogo { creditosJogo = creditosJogo jogo - preco }
+
+abastece :: Jogo -> Jogo
+abastece jogo
+    | not (estaEm Posto jogo) = jogo
+    | otherwise = pagaCreditos (unidades * precoCombustivel) (atualizaEscavadora (somaCombustivel unidades) jogo)
+  where unidades = unidadesAbastecer jogo
