@@ -17,6 +17,7 @@ import Tarefa0_2026
 -- 'Parado' desliga os propulsores. É a única jogada que o faz: só um @Move Cima@ os liga.
 efetuaJogada :: Jogada -> Jogo -> Jogo
 efetuaJogada Parado        jogo = parado jogo
+efetuaJogada LargaDinamite jogo = largaDinamite jogo
 efetuaJogada _ jogo = jogo
 
 
@@ -27,3 +28,14 @@ desligaVoo escavadora = escavadora { voandoEscavadora = False }
 
 parado :: Jogo -> Jogo
 parado jogo = atualizaEscavadora desligaVoo jogo
+
+gastaDinamite :: Escavadora -> Escavadora
+gastaDinamite escavadora = escavadora { dinamitesEscavadora  = dinamitesEscavadora escavadora - 1 } 
+
+largaDinamite :: Jogo -> Jogo
+largaDinamite jogo 
+            | dinamitesEscavadora (escavadoraJogo jogo) <= 0 = jogo
+            | otherwise = jogoNovo {objetosJogo = novo:objetosJogo jogo}
+    
+    where jogoNovo = atualizaEscavadora gastaDinamite jogo
+          novo = Dinamite (posicaoEscavadora(escavadoraJogo jogo)) duracaoDinamite
