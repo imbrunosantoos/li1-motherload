@@ -18,6 +18,7 @@ import Tarefa0_2026
 efetuaJogada :: Jogada -> Jogo -> Jogo
 efetuaJogada Parado        jogo = parado jogo
 efetuaJogada LargaDinamite jogo = largaDinamite jogo
+efetuaJogada Vende         jogo = vende jogo
 efetuaJogada _ jogo = jogo
 
 
@@ -39,3 +40,16 @@ largaDinamite jogo
     
     where jogoNovo = atualizaEscavadora gastaDinamite jogo
           novo = Dinamite (posicaoEscavadora(escavadoraJogo jogo)) duracaoDinamite
+
+estaEm :: TipoEdificio -> Jogo -> Bool
+estaEm edificio jogo =  edificioEm (posicaoEscavadora(escavadoraJogo jogo)) jogo == Just edificio 
+
+esvaziaCarga :: Escavadora -> Escavadora 
+esvaziaCarga escavadora = escavadora {cargaEscavadora = []}
+
+vende :: Jogo -> Jogo
+vende jogo 
+    | not (estaEm Refinaria jogo) = jogo
+    | otherwise = jogoNovo {creditosJogo = valorCarga(escavadoraJogo jogo) + creditosJogo jogo}
+
+  where jogoNovo = atualizaEscavadora esvaziaCarga jogo  
