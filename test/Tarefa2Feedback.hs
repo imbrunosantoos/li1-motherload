@@ -83,11 +83,54 @@ largaComOutraNoMapa =
 largaAVoar :: (Jogada, Jogo)
 largaAVoar = (LargaDinamite, comEscavadora escavadoraExemplo { posicaoEscavadora = (3,3), voandoEscavadora = True, dinamitesEscavadora = 1 })
 
+-- | O jogo do exemplo com a escavadora noutra posição e com uma dada quantidade de créditos.
+-- Serve para os testes dos edifícios.
+naPosicaoComCreditos :: Posicao -> Creditos -> Escavadora -> Jogo
+naPosicaoComCreditos p creditos esc =
+  jogoExemplo { escavadoraJogo = esc { posicaoEscavadora = p }, creditosJogo = creditos }
+
+-- * Testes dos edifícios
+
+-- | Vende a carga na 'Refinaria': os créditos sobem o valor da carga e a carga fica vazia.
+vendeNaRefinaria :: (Jogada, Jogo)
+vendeNaRefinaria = (Vende, naPosicaoComCreditos (0,6) 100 escavadoraExemplo { cargaEscavadora = [Ferro, Prata, Diamante] })
+
+-- | Tenta vender no 'Posto': inválida.
+vendeForaDaRefinaria :: (Jogada, Jogo)
+vendeForaDaRefinaria = (Vende, naPosicaoComCreditos (0,2) 100 escavadoraExemplo { cargaEscavadora = [Ferro, Prata, Diamante] })
+
+-- | Abastece no 'Posto' com créditos de sobra: o depósito fica cheio.
+abasteceComCreditos :: (Jogada, Jogo)
+abasteceComCreditos = (Abastece, naPosicaoComCreditos (0,2) 500 escavadoraExemplo { combustivelEscavadora = 50 })
+
+-- | Abastece no 'Posto' com poucos créditos: abastece só o que consegue pagar.
+abasteceComPoucosCreditos :: (Jogada, Jogo)
+abasteceComPoucosCreditos = (Abastece, naPosicaoComCreditos (0,2) 30 escavadoraExemplo { combustivelEscavadora = 50 })
+
+-- | Tenta abastecer na 'Oficina': inválida.
+abasteceForaDoPosto :: (Jogada, Jogo)
+abasteceForaDoPosto = (Abastece, naPosicaoComCreditos (0,10) 500 escavadoraExemplo { combustivelEscavadora = 50 })
+
+-- | Repara na 'Oficina' com créditos de sobra: a vida fica no máximo.
+reparaComCreditos :: (Jogada, Jogo)
+reparaComCreditos = (Repara, naPosicaoComCreditos (0,10) 500 escavadoraExemplo { vidaEscavadora = 40 })
+
+-- | Repara com 5 créditos: o preço é 2, por isso repara 2 pontos e sobra 1 crédito.
+reparaComPoucosCreditos :: (Jogada, Jogo)
+reparaComPoucosCreditos = (Repara, naPosicaoComCreditos (0,10) 5 escavadoraExemplo { vidaEscavadora = 40 })
+
+-- | Tenta reparar na 'Refinaria': inválida.
+reparaForaDaOficina :: (Jogada, Jogo)
+reparaForaDaOficina = (Repara, naPosicaoComCreditos (0,6) 500 escavadoraExemplo { vidaEscavadora = 40 })
+
 
 -- | Os testes da Tarefa 2, que são avaliados pelos docentes.
 testesTarefa2 :: [(Jogada, Jogo)]
 testesTarefa2 = [paradoAVoar, paradoSemVoar, largaComDinamites,
-                 largaComOutraNoMapa, largaAVoar, largaSemDinamites]
+                 largaComOutraNoMapa, largaAVoar, largaSemDinamites,
+                 vendeNaRefinaria, vendeForaDaRefinaria, abasteceComCreditos,
+                 abasteceComPoucosCreditos, abasteceForaDoPosto, reparaComCreditos,
+                 reparaComPoucosCreditos, reparaForaDaOficina]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
