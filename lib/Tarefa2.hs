@@ -21,7 +21,7 @@ efetuaJogada LargaDinamite jogo = largaDinamite jogo
 efetuaJogada Vende         jogo = vende jogo
 efetuaJogada Abastece      jogo = abastece jogo
 efetuaJogada Repara        jogo = repara jogo
-efetuaJogada _ jogo= jogo
+efetuaJogada (Compra i)    jogo=  compra i jogo
 
 
 -- * Funções auxiliares
@@ -100,6 +100,8 @@ abastece jogo
     | otherwise = pagaCreditos (unidades * precoCombustivel) (atualizaEscavadora (somaCombustivel unidades) jogo)
   where unidades = unidadesAbastecer jogo
 
+-- *** Repara
+
 -- | Soma pontos à vida da escavadora
 somaVida :: Int -> Escavadora -> Escavadora
 somaVida vida escavadora = escavadora {vidaEscavadora = vidaEscavadora escavadora + vida}
@@ -107,8 +109,6 @@ somaVida vida escavadora = escavadora {vidaEscavadora = vidaEscavadora escavador
 -- | Quanta vida falta para chegar à vida máxima
 faltaVida :: Escavadora -> Int
 faltaVida escavadora = vidaMaximaEscavadora escavadora - vidaEscavadora escavadora
-
--- *** Repara
 
 -- | Quantos pontos de vida se reparam: a vida que falta, limitada pelo que os créditos
 -- conseguem pagar
@@ -125,21 +125,13 @@ repara jogo
   where vida = unidadesReparar jogo
 
 eMelhoria :: Melhoria -> Escavadora -> Bool
-eMelhoria (Deposito d) escavadora 
-        | d > depositoEscavadora escavadora = True
-        | otherwise = False
+eMelhoria (Deposito d) escavadora = d > depositoEscavadora escavadora 
 
-eMelhoria (Vida v)     escavadora 
-        | v > vidaMaximaEscavadora escavadora = True
-        | otherwise = False
+eMelhoria (Vida v)     escavadora = v > vidaMaximaEscavadora escavadora 
 
-eMelhoria (Broca n)    escavadora 
-        | n > brocaEscavadora escavadora = True
-        | otherwise = False
+eMelhoria (Broca n)    escavadora = n > brocaEscavadora escavadora 
 
-eMelhoria (Carga c)    escavadora 
-        | c > capacidadeEscavadora escavadora = True
-        | otherwise = False
+eMelhoria (Carga c)    escavadora = c > capacidadeEscavadora escavadora 
 
 eMelhoria (Dinamites _) _         = True
 
@@ -154,10 +146,12 @@ compraMelhoria :: (Creditos, Melhoria) -> Jogo -> Jogo
 compraMelhoria (preco, melhoria) jogo 
               | creditosJogo jogo < preco = jogo
               | not (eMelhoria melhoria (escavadoraJogo jogo)) = jogo
-              | pagaCreditos preco (atualizaEscavadora (aplicaMelhoria melhoria) jogo)
+              | otherwise = pagaCreditos preco (atualizaEscavadora (aplicaMelhoria melhoria) jogo)
 
 compra :: Int -> Jogo -> Jogo
-compra 
-
-
+compra numero jogo 
+     | not (estaEm Oficina jogo) = jogo
+     | otherwise = case encontraIndiceLista numero (lojaJogo jogo) of
+        Nothing   -> jogo
+        Just item -> compraMelhoria item jogo
 
