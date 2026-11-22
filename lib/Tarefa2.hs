@@ -22,7 +22,7 @@ efetuaJogada Vende         jogo = vende jogo
 efetuaJogada Abastece      jogo = abastece jogo
 efetuaJogada Repara        jogo = repara jogo
 efetuaJogada (Compra i)    jogo = compra i jogo
-efetuaJogada (Move _)      jogo = jogo
+efetuaJogada (Move d)      jogo = move d jogo
 
 -- * Funções auxiliares
 
@@ -202,3 +202,27 @@ escava d bloco jogo
   where jogoNovo = atualizaEscavadora (recolhe bloco) (atualizaEscavadora (deslocaEscavadora d (custoEscavacao bloco)) jogo)
         destino = movePosicao d (posicaoEscavadora (escavadoraJogo jogo))
 
+-- | Verifica se a broca da escavadora consegue escavar o bloco: o bloco tem de ter dureza e a
+-- dureza não pode ser maior do que a broca, a rocha e o ar não se escavam
+consegueEscavar :: Bloco -> Escavadora -> Bool
+consegueEscavar bloco escavadora = case durezaBloco bloco of
+    Nothing -> False
+    Just n -> n <= brocaEscavadora escavadora 
+
+-- | Decide o que fazer conforme o bloco de destino: voa para ar em cima, anda para ar ao lado,
+-- escava se estiver apoiada e se a broca chegar, em todos os outros casos, o jogo fica igual
+moveParaBloco :: Direcao -> Bloco -> Jogo -> Jogo
+moveParaBloco d bloco jogo 
+            | d == Cima && bloco == Ar = voa jogo
+            | d == Cima = jogo
+            | bloco == Ar && d /= Baixo = anda d jogo
+            | apoiado jogo && consegueEscavar bloco (escavadoraJogo jogo) = escava d bloco jogo
+            | otherwise = jogo
+
+-- | Jogada 'Move': vê qual é o bloco de destino e decide com 'moveParaBloco'
+-- se o destino tiver fora do mapa, o jogo fica igual
+move :: Direcao -> Jogo -> Jogo
+move d jogo = case blocoEm destino (mapaJogo jogo) of
+    Nothing -> jogo
+    Just bloco -> moveParaBloco d bloco jogo
+    where destino = movePosicao d (posicaoEscavadora (escavadoraJogo jogo))
