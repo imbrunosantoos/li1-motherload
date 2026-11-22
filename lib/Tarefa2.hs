@@ -172,3 +172,13 @@ anda d jogo
     | combustivelEscavadora(escavadoraJogo jogo) < custoMovimento  = jogo
     | otherwise = atualizaEscavadora (deslocaEscavadora d custoMovimento ) jogo
 
+ligaVoo :: Escavadora -> Escavadora 
+ligaVoo escavadora = escavadora {voandoEscavadora = True,
+                                 quedaEscavadora = 0}
+
+voa :: Jogo -> Jogo
+voa jogo 
+   | combustivelEscavadora (escavadoraJogo jogo) < custoVoo = jogo
+   | otherwise = atualizaEscavadora ligaVoo (atualizaEscavadora (deslocaEscavadora Cima custoVoo) jogo)
+
+
