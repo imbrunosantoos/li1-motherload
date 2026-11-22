@@ -20,7 +20,8 @@ efetuaJogada Parado        jogo = parado jogo
 efetuaJogada LargaDinamite jogo = largaDinamite jogo
 efetuaJogada Vende         jogo = vende jogo
 efetuaJogada Abastece      jogo = abastece jogo
-efetuaJogada _ jogo = jogo
+efetuaJogada Repara        jogo = repara jogo
+efetuaJogada _ jogo= jogo
 
 
 -- * Funções auxiliares
@@ -98,3 +99,19 @@ abastece jogo
     | not (estaEm Posto jogo) = jogo
     | otherwise = pagaCreditos (unidades * precoCombustivel) (atualizaEscavadora (somaCombustivel unidades) jogo)
   where unidades = unidadesAbastecer jogo
+
+somaVida :: Int -> Escavadora -> Escavadora
+somaVida vida escavadora = escavadora {vidaEscavadora = vidaEscavadora escavadora + vida}
+
+faltaVida :: Escavadora -> Int
+faltaVida escavadora = vidaMaximaEscavadora escavadora - vidaEscavadora escavadora
+
+unidadesReparar :: Jogo -> Int
+unidadesReparar jogo = min(faltaVida (escavadoraJogo jogo)) (creditosJogo jogo `div` precoReparacao)
+
+repara :: Jogo -> Jogo
+repara jogo
+    | not (estaEm Oficina jogo) = jogo
+    | otherwise = pagaCreditos (vida * precoReparacao) (atualizaEscavadora(somaVida vida) jogo)
+
+  where vida = unidadesReparar jogo
