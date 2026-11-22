@@ -183,6 +183,8 @@ voa jogo
    | combustivelEscavadora (escavadoraJogo jogo) < custoVoo = jogo
    | otherwise = atualizaEscavadora ligaVoo (atualizaEscavadora (deslocaEscavadora Cima custoVoo) jogo)
 
+-- | O efeito do bloco escavado na escavadora: a 'Lava' tira 'danoLava' de vida, o minério entra
+-- na carga se couber (senão perde-se) e a 'Terra' não faz nada
 recolhe :: Bloco -> Escavadora -> Escavadora
 recolhe Lava escavadora = sofreDano danoLava escavadora
 recolhe (Minerio m) escavadora 
@@ -190,6 +192,8 @@ recolhe (Minerio m) escavadora
         | otherwise = escavadora
 recolhe _ escavadora = escavadora
 
+-- | Escava o bloco na direção dada: gasta 'custoEscavacao', sofre o efeito do bloco ('recolhe'),
+-- o bloco passa a 'Ar' e a escavadora move-se para lá
 escava :: Direcao -> Bloco -> Jogo -> Jogo
 escava d bloco jogo 
       | combustivelEscavadora (escavadoraJogo jogo) < custoEscavacao bloco = jogo
