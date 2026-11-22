@@ -172,10 +172,12 @@ anda d jogo
     | combustivelEscavadora(escavadoraJogo jogo) < custoMovimento  = jogo
     | otherwise = atualizaEscavadora (deslocaEscavadora d custoMovimento ) jogo
 
+-- | Ativa voo da escavadora e põe a queda a 0
 ligaVoo :: Escavadora -> Escavadora 
 ligaVoo escavadora = escavadora {voandoEscavadora = True,
                                  quedaEscavadora = 0}
 
+-- | Sobe a escavadora um bloco com o 'ligaVoo' , gastando e gasta o 'custoVoo'
 voa :: Jogo -> Jogo
 voa jogo 
    | combustivelEscavadora (escavadoraJogo jogo) < custoVoo = jogo
