@@ -157,11 +157,16 @@ compra numero jogo
         Nothing   -> jogo
         Just item -> compraMelhoria item jogo
 
+-- ** Move
+
+-- | Desloca a escavadora um bloco na direção dada: muda a posição e a direção, e gasta o custo
+-- em combustível
 deslocaEscavadora :: Direcao -> Int -> Escavadora -> Escavadora
 deslocaEscavadora d blocos escavadora = escavadora {posicaoEscavadora = movePosicao d (posicaoEscavadora escavadora),
                                                     direcaoEscavadora = d,
                                                     combustivelEscavadora = combustivelEscavadora escavadora - blocos}
 
+-- | Move a escavadora para um bloco de ar, gastando o custo de movimento
 anda :: Direcao -> Jogo -> Jogo
 anda d jogo 
     | combustivelEscavadora(escavadoraJogo jogo) < custoMovimento  = jogo
