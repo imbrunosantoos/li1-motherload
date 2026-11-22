@@ -124,17 +124,17 @@ repara jogo
 
   where vida = unidadesReparar jogo
 
+-- *** Compra
+
+-- | Verifica se uma melhoria é maior do que o que a escavadora já tem
 eMelhoria :: Melhoria -> Escavadora -> Bool
 eMelhoria (Deposito d) escavadora = d > depositoEscavadora escavadora 
-
 eMelhoria (Vida v)     escavadora = v > vidaMaximaEscavadora escavadora 
-
 eMelhoria (Broca n)    escavadora = n > brocaEscavadora escavadora 
-
 eMelhoria (Carga c)    escavadora = c > capacidadeEscavadora escavadora 
-
 eMelhoria (Dinamites _) _         = True
 
+-- | Aplica uma melhoria à escavadora: substitui o valor, exceto 'Dinamites', que se soma
 aplicaMelhoria :: Melhoria -> Escavadora -> Escavadora
 aplicaMelhoria (Deposito d)  escavadora = escavadora {depositoEscavadora = d}
 aplicaMelhoria (Vida v)      escavadora = escavadora {vidaMaximaEscavadora = v}
@@ -142,12 +142,14 @@ aplicaMelhoria (Broca n)     escavadora = escavadora {brocaEscavadora = n}
 aplicaMelhoria (Carga c)     escavadora = escavadora {capacidadeEscavadora = c}
 aplicaMelhoria (Dinamites d) escavadora = escavadora {dinamitesEscavadora = dinamitesEscavadora escavadora + d}
 
+-- | Compra um item da loja, se houver créditos para o preço e se for mesmo uma melhoria
 compraMelhoria :: (Creditos, Melhoria) -> Jogo -> Jogo
 compraMelhoria (preco, melhoria) jogo 
               | creditosJogo jogo < preco = jogo
               | not (eMelhoria melhoria (escavadoraJogo jogo)) = jogo
               | otherwise = pagaCreditos preco (atualizaEscavadora (aplicaMelhoria melhoria) jogo)
 
+-- | Jogada 'Compra': na oficina, compra a melhoria com esse índice da loja - conta a partir de 0
 compra :: Int -> Jogo -> Jogo
 compra numero jogo 
      | not (estaEm Oficina jogo) = jogo
