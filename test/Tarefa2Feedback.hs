@@ -54,9 +54,40 @@ jogoExemplo = Jogo
 comEscavadora :: Escavadora -> Jogo
 comEscavadora esc = jogoExemplo { escavadoraJogo = esc }
 
+-- * Testes do Parado
+
+-- | 'Parado' a voar: os propulsores desligam-se.
+paradoAVoar :: (Jogada, Jogo)
+paradoAVoar = (Parado, comEscavadora escavadoraExemplo { posicaoEscavadora = (3,3), voandoEscavadora = True })
+
+-- | 'Parado' sem voar: nada muda.
+paradoSemVoar :: (Jogada, Jogo)
+paradoSemVoar = (Parado, jogoExemplo)
+
+-- * Testes da LargaDinamite
+
+-- | Larga uma dinamite com 2 no inventário.
+largaComDinamites :: (Jogada, Jogo)
+largaComDinamites = (LargaDinamite, comEscavadora escavadoraExemplo { dinamitesEscavadora = 2 })
+
+-- | Sem dinamites no inventário: inválida.
+largaSemDinamites :: (Jogada, Jogo)
+largaSemDinamites = (LargaDinamite, jogoExemplo)
+
+-- | Já há uma dinamite no mapa: a nova junta-se à que lá está.
+largaComOutraNoMapa :: (Jogada, Jogo)
+largaComOutraNoMapa =
+  (LargaDinamite, (comEscavadora escavadoraExemplo { dinamitesEscavadora = 1 }) { objetosJogo = [Dinamite (3,3) 2] })
+
+-- | Larga uma dinamite a voar: também é válido.
+largaAVoar :: (Jogada, Jogo)
+largaAVoar = (LargaDinamite, comEscavadora escavadoraExemplo { posicaoEscavadora = (3,3), voandoEscavadora = True, dinamitesEscavadora = 1 })
+
+
 -- | Os testes da Tarefa 2, que são avaliados pelos docentes.
 testesTarefa2 :: [(Jogada, Jogo)]
-testesTarefa2 = []
+testesTarefa2 = [paradoAVoar, paradoSemVoar, largaComDinamites,
+                 largaComOutraNoMapa, largaAVoar, largaSemDinamites]
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
