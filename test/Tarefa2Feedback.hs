@@ -123,6 +123,43 @@ reparaComPoucosCreditos = (Repara, naPosicaoComCreditos (0,10) 5 escavadoraExemp
 reparaForaDaOficina :: (Jogada, Jogo)
 reparaForaDaOficina = (Repara, naPosicaoComCreditos (0,6) 500 escavadoraExemplo { vidaEscavadora = 40 })
 
+-- * Testes da Compra
+
+-- | Compra a melhoria de índice 1 da loja ('Carga' 40, por 500).
+compraCarga :: (Jogada, Jogo)
+compraCarga = (Compra 1, naPosicaoComCreditos (0,10) 600 escavadoraExemplo)
+
+-- | Compra a melhoria de índice 0 ('Dinamites' 3, por 250) com os créditos certos.
+compraDinamitesNoLimite :: (Jogada, Jogo)
+compraDinamitesNoLimite = (Compra 0, naPosicaoComCreditos (0,10) 250 escavadoraExemplo { dinamitesEscavadora = 1 })
+
+-- | Índice depois do fim da loja: inválida.
+compraIndiceInvalido :: (Jogada, Jogo)
+compraIndiceInvalido = (Compra 9, naPosicaoComCreditos (0,10) 10000 escavadoraExemplo)
+
+-- | Índice negativo: inválida.
+compraIndiceNegativo :: (Jogada, Jogo)
+compraIndiceNegativo = (Compra (-1), naPosicaoComCreditos (0,10) 10000 escavadoraExemplo)
+
+-- | Falta 1 crédito para o 'Deposito' 400: inválida.
+compraSemCreditos :: (Jogada, Jogo)
+compraSemCreditos = (Compra 2, naPosicaoComCreditos (0,10) 799 escavadoraExemplo)
+
+-- | O depósito já é 400, por isso o 'Deposito' 400 não é melhoria: inválida.
+compraQueNaoMelhora :: (Jogada, Jogo)
+compraQueNaoMelhora = (Compra 2, naPosicaoComCreditos (0,10) 1000 escavadoraExemplo { depositoEscavadora = 400 })
+
+-- | Tenta comprar na 'Refinaria': inválida.
+compraForaDaOficina :: (Jogada, Jogo)
+compraForaDaOficina = (Compra 0, naPosicaoComCreditos (0,6) 1000 escavadoraExemplo)
+
+-- | Compra a 'Broca' 2.
+compraBroca :: (Jogada, Jogo)
+compraBroca = (Compra 4, naPosicaoComCreditos (0,10) 2000 escavadoraExemplo)
+
+-- | Compra a 'Vida' 200: a vida máxima sobe, mas a vida atual não muda.
+compraVida :: (Jogada, Jogo)
+compraVida = (Compra 3, naPosicaoComCreditos (0,10) 1200 escavadoraExemplo { vidaEscavadora = 50 })
 
 -- | Os testes da Tarefa 2, que são avaliados pelos docentes.
 testesTarefa2 :: [(Jogada, Jogo)]
@@ -130,7 +167,11 @@ testesTarefa2 = [paradoAVoar, paradoSemVoar, largaComDinamites,
                  largaComOutraNoMapa, largaAVoar, largaSemDinamites,
                  vendeNaRefinaria, vendeForaDaRefinaria, abasteceComCreditos,
                  abasteceComPoucosCreditos, abasteceForaDoPosto, reparaComCreditos,
-                 reparaComPoucosCreditos, reparaForaDaOficina]
+                 reparaComPoucosCreditos, reparaForaDaOficina, reparaComPoucosCreditos,
+                 reparaForaDaOficina, compraCarga, compraDinamitesNoLimite,
+                 compraIndiceInvalido, compraIndiceNegativo, compraSemCreditos,
+                compraQueNaoMelhora, compraForaDaOficina, compraBroca, compraVida]
+
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
 main :: IO ()
