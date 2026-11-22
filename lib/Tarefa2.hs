@@ -183,4 +183,18 @@ voa jogo
    | combustivelEscavadora (escavadoraJogo jogo) < custoVoo = jogo
    | otherwise = atualizaEscavadora ligaVoo (atualizaEscavadora (deslocaEscavadora Cima custoVoo) jogo)
 
+recolhe :: Bloco -> Escavadora -> Escavadora
+recolhe Lava escavadora = sofreDano danoLava escavadora
+recolhe (Minerio m) escavadora 
+        |  (capacidadeEscavadora escavadora >= pesoCarga escavadora + pesoMinerio m) = escavadora {cargaEscavadora = m:cargaEscavadora escavadora}
+        | otherwise = escavadora
+recolhe _ escavadora = escavadora
+
+escava :: Direcao -> Bloco -> Jogo -> Jogo
+escava d bloco jogo 
+      | combustivelEscavadora (escavadoraJogo jogo) < custoEscavacao bloco = jogo
+      | otherwise = jogoNovo { mapaJogo = atualizaBloco destino Ar (mapaJogo jogo)}
+
+  where jogoNovo = atualizaEscavadora (recolhe bloco) (atualizaEscavadora (deslocaEscavadora d (custoEscavacao bloco)) jogo)
+        destino = movePosicao d (posicaoEscavadora (escavadoraJogo jogo))
 
