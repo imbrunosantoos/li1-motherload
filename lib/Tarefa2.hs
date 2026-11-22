@@ -21,8 +21,8 @@ efetuaJogada LargaDinamite jogo = largaDinamite jogo
 efetuaJogada Vende         jogo = vende jogo
 efetuaJogada Abastece      jogo = abastece jogo
 efetuaJogada Repara        jogo = repara jogo
-efetuaJogada (Compra i)    jogo=  compra i jogo
-
+efetuaJogada (Compra i)    jogo = compra i jogo
+efetuaJogada (Move _)      jogo = jogo
 
 -- * Funções auxiliares
 
@@ -156,4 +156,14 @@ compra numero jogo
      | otherwise = case encontraIndiceLista numero (lojaJogo jogo) of
         Nothing   -> jogo
         Just item -> compraMelhoria item jogo
+
+deslocaEscavadora :: Direcao -> Int -> Escavadora -> Escavadora
+deslocaEscavadora d blocos escavadora = escavadora {posicaoEscavadora = movePosicao d (posicaoEscavadora escavadora),
+                                                    direcaoEscavadora = d,
+                                                    combustivelEscavadora = combustivelEscavadora escavadora - blocos}
+
+anda :: Direcao -> Jogo -> Jogo
+anda d jogo 
+    | combustivelEscavadora(escavadoraJogo jogo) < custoMovimento  = jogo
+    | otherwise = atualizaEscavadora (deslocaEscavadora d custoMovimento ) jogo
 
