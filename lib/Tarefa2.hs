@@ -100,18 +100,64 @@ abastece jogo
     | otherwise = pagaCreditos (unidades * precoCombustivel) (atualizaEscavadora (somaCombustivel unidades) jogo)
   where unidades = unidadesAbastecer jogo
 
+-- | Soma pontos à vida da escavadora
 somaVida :: Int -> Escavadora -> Escavadora
 somaVida vida escavadora = escavadora {vidaEscavadora = vidaEscavadora escavadora + vida}
 
+-- | Quanta vida falta para chegar à vida máxima
 faltaVida :: Escavadora -> Int
 faltaVida escavadora = vidaMaximaEscavadora escavadora - vidaEscavadora escavadora
 
+-- *** Repara
+
+-- | Quantos pontos de vida se reparam: a vida que falta, limitada pelo que os créditos
+-- conseguem pagar
 unidadesReparar :: Jogo -> Int
 unidadesReparar jogo = min(faltaVida (escavadoraJogo jogo)) (creditosJogo jogo `div` precoReparacao)
 
+-- | Jogada 'Repara': na oficina, repara a vida que falta (ou o que os créditos pagam) e
+-- paga o preço reparação por ponto
 repara :: Jogo -> Jogo
 repara jogo
     | not (estaEm Oficina jogo) = jogo
     | otherwise = pagaCreditos (vida * precoReparacao) (atualizaEscavadora(somaVida vida) jogo)
 
   where vida = unidadesReparar jogo
+
+eMelhoria :: Melhoria -> Escavadora -> Bool
+eMelhoria (Deposito d) escavadora 
+        | d > depositoEscavadora escavadora = True
+        | otherwise = False
+
+eMelhoria (Vida v)     escavadora 
+        | v > vidaMaximaEscavadora escavadora = True
+        | otherwise = False
+
+eMelhoria (Broca n)    escavadora 
+        | n > brocaEscavadora escavadora = True
+        | otherwise = False
+
+eMelhoria (Carga c)    escavadora 
+        | c > capacidadeEscavadora escavadora = True
+        | otherwise = False
+
+eMelhoria (Dinamites _) _         = True
+
+aplicaMelhoria :: Melhoria -> Escavadora -> Escavadora
+aplicaMelhoria (Deposito d)  escavadora = escavadora {depositoEscavadora = d}
+aplicaMelhoria (Vida v)      escavadora = escavadora {vidaMaximaEscavadora = v}
+aplicaMelhoria (Broca n)     escavadora = escavadora {brocaEscavadora = n}
+aplicaMelhoria (Carga c)     escavadora = escavadora {capacidadeEscavadora = c}
+aplicaMelhoria (Dinamites d) escavadora = escavadora {dinamitesEscavadora = dinamitesEscavadora escavadora + d}
+
+compraMelhoria :: (Creditos, Melhoria) -> Jogo -> Jogo
+compraMelhoria (preco, melhoria) jogo 
+              | creditosJogo jogo < preco = jogo
+              | not (eMelhoria melhoria (escavadoraJogo jogo)) = jogo
+              | pagaCreditos preco (atualizaEscavadora (aplicaMelhoria melhoria) jogo)
+
+compra :: Int -> Jogo -> Jogo
+compra 
+
+
+
