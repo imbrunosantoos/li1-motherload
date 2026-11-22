@@ -54,6 +54,28 @@ jogoExemplo = Jogo
 comEscavadora :: Escavadora -> Jogo
 comEscavadora esc = jogoExemplo { escavadoraJogo = esc }
 
+-- | Mapa pequeno (5x5) com todos os tipos de bloco à volta das posições usadas nos testes
+mapaPequeno :: Mapa
+mapaPequeno =
+  [ [Ar,    Ar,              Ar,    Ar,            Ar              ]
+  , [Lava,  Ar,              Rocha, Ar,            Minerio Diamante]
+  , [Terra, Minerio Platina, Terra, Minerio Prata, Terra           ]
+  , [Terra, Ar,              Terra, Ar,            Terra           ]
+  , [Rocha, Ar,              Terra, Ar,            Rocha           ]
+  ]
+
+-- | Jogo válido no mapa pequeno, com a escavadora dada
+noMapaPequeno :: Escavadora -> Jogo
+noMapaPequeno esc = jogoExemplo
+  { mapaJogo = mapaPequeno
+  , escavadoraJogo = esc
+  , edificiosJogo = [Edificio Posto (0,0), Edificio Refinaria (0,2), Edificio Oficina (0,4)]
+  }
+
+-- | A escavadora do exemplo em (1,1) o mapa pequeno, apoiada em 'Platina'.
+escavadoraPequena :: Escavadora
+escavadoraPequena = escavadoraExemplo { posicaoEscavadora = (1,1) }
+
 -- * Testes do Parado
 
 -- | 'Parado' a voar: os propulsores desligam-se.
@@ -161,16 +183,138 @@ compraBroca = (Compra 4, naPosicaoComCreditos (0,10) 2000 escavadoraExemplo)
 compraVida :: (Jogada, Jogo)
 compraVida = (Compra 3, naPosicaoComCreditos (0,10) 1200 escavadoraExemplo { vidaEscavadora = 50 })
 
+-- * Testes do Move com a escavadora apoiada
+
+-- | Exemplo do enunciado: escava a 'Terra' à direita e move-se para lá.
+escavaTerraDireita :: (Jogada, Jogo)
+escavaTerraDireita = (Move Direita, jogoExemplo)
+
+-- | Escava a 'Terra' por baixo. A queda não muda.
+escavaTerraBaixo :: (Jogada, Jogo)
+escavaTerraBaixo = (Move Baixo, jogoExemplo)
+
+-- | Apoiada, voa para o 'Ar' que está por cima.
+voaCimaApoiada :: (Jogada, Jogo)
+voaCimaApoiada = (Move Cima, jogoExemplo)
+
+-- | Apoiada, anda para o 'Ar' ao lado, à superfície.
+andaParaArApoiada :: (Jogada, Jogo)
+andaParaArApoiada = (Move Esquerda, comEscavadora escavadoraExemplo { posicaoEscavadora = (0,4) })
+
+-- | Apoiada, tenta voar contra 'Terra': inválida.
+cimaContraBloco :: (Jogada, Jogo)
+cimaContraBloco = (Move Cima, comEscavadora escavadoraExemplo { posicaoEscavadora = (5,4) })
+
+-- | Escava 'Lava': perde 'danoLava' de vida.
+escavaLava :: (Jogada, Jogo)
+escavaLava = (Move Esquerda, noMapaPequeno escavadoraPequena)
+
+-- | Escava 'Lava' com menos vida do que o dano: a vida fica em 0 e não negativa.
+lavaComPoucaVida :: (Jogada, Jogo)
+lavaComPoucaVida = (Move Esquerda, noMapaPequeno escavadoraPequena { vidaEscavadora = 20 })
+
+-- | Tenta escavar 'Rocha': inválida.
+rochaInvalida :: (Jogada, Jogo)
+rochaInvalida = (Move Direita, noMapaPequeno escavadoraPequena)
+
+-- | Tenta escavar 'Platina' com a broca 1: inválida.
+minerioDuroDemais :: (Jogada, Jogo)
+minerioDuroDemais = (Move Baixo, noMapaPequeno escavadoraPequena)
+
+-- | Escava 'Platina' com a broca 3 e já com 'Ferro' na carga: a 'Platina' cabe e entra na carga.
+minerioQueCabe :: (Jogada, Jogo)
+minerioQueCabe = (Move Baixo, noMapaPequeno escavadoraPequena { brocaEscavadora = 3, cargaEscavadora = [Ferro] })
+
+-- | Escava 'Platina' (peso 5) com a carga a pesar 16 de 20: não cabe e perde-se.
+minerioQueNaoCabe :: (Jogada, Jogo)
+minerioQueNaoCabe =
+  (Move Baixo, noMapaPequeno escavadoraPequena { brocaEscavadora = 3, cargaEscavadora = [Ouro, Ouro, Ouro, Ouro] })
+
+-- | Escava 'Platina' (peso 5) com a carga a pesar 15 de 20: fica exatamente cheia.
+minerioNoLimite :: (Jogada, Jogo)
+minerioNoLimite =
+  (Move Baixo, noMapaPequeno escavadoraPequena { brocaEscavadora = 3, cargaEscavadora = [Platina, Platina, Platina] })
+
+-- | Escava 'Diamante' para o lado, com a broca 3.
+diamanteParaOLado :: (Jogada, Jogo)
+diamanteParaOLado = (Move Direita, noMapaPequeno escavadoraPequena { posicaoEscavadora = (1,3), brocaEscavadora = 3 })
+
+-- | Na última linha, tenta ir para baixo: o destino está fora do mapa.
+baixoNaUltimaLinha :: (Jogada, Jogo)
+baixoNaUltimaLinha = (Move Baixo, noMapaPequeno escavadoraPequena { posicaoEscavadora = (4,1) })
+
+-- | Na última linha está apoiada, por isso pode escavar para o lado.
+escavaNaUltimaLinha :: (Jogada, Jogo)
+escavaNaUltimaLinha = (Move Direita, noMapaPequeno escavadoraPequena { posicaoEscavadora = (4,1) })
+
+-- | Na última coluna, tenta ir para a direita: o destino está fora do mapa.
+direitaNaUltimaColuna :: (Jogada, Jogo)
+direitaNaUltimaColuna = (Move Direita, noMapaPequeno escavadoraPequena { posicaoEscavadora = (0,4) })
+
+-- | À superfície, tenta subir: o destino está fora do mapa.
+cimaNaSuperficie :: (Jogada, Jogo)
+cimaNaSuperficie = (Move Cima, noMapaPequeno escavadoraPequena { posicaoEscavadora = (0,1) })
+
+-- | A voar mas apoiada: escava para o lado e os propulsores continuam ligados.
+escavaAVoar :: (Jogada, Jogo)
+escavaAVoar = (Move Direita, comEscavadora escavadoraExemplo { voandoEscavadora = True })
+
+-- * Testes do Move com a escavadora no ar
+
+-- | No ar, tenta ir contra 'Terra': inválida, porque só se escava apoiado.
+noArLadoBloco :: (Jogada, Jogo)
+noArLadoBloco = (Move Esquerda, comEscavadora escavadoraExemplo { posicaoEscavadora = (3,3) })
+
+-- | No ar, tenta ir para baixo: inválida, quem desce é a gravidade.
+noArBaixo :: (Jogada, Jogo)
+noArBaixo = (Move Baixo, comEscavadora escavadoraExemplo { posicaoEscavadora = (3,3) })
+
+-- | No ar e a cair, sobe: liga os propulsores e a queda volta a 0.
+noArCima :: (Jogada, Jogo)
+noArCima = (Move Cima, comEscavadora escavadoraExemplo { posicaoEscavadora = (3,3), quedaEscavadora = 1 })
+
+-- | No ar, à superfície, anda para o 'Ar' ao lado.
+noArLadoAr :: (Jogada, Jogo)
+noArLadoAr = (Move Direita, comEscavadora escavadoraExemplo { posicaoEscavadora = (0,3) })
+
+-- * Testes do combustível
+
+-- | Sem combustível, não consegue escavar.
+semCombustivel :: (Jogada, Jogo)
+semCombustivel = (Move Direita, comEscavadora escavadoraExemplo { combustivelEscavadora = 0 })
+
+-- | Com o combustível igual ao 'custoVoo', consegue voar e fica com 0.
+combustivelNoLimite :: (Jogada, Jogo)
+combustivelNoLimite = (Move Cima, comEscavadora escavadoraExemplo { combustivelEscavadora = 2 })
+
+-- | Com menos combustível do que o 'custoVoo', não consegue voar.
+combustivelNaoChegaParaVoar :: (Jogada, Jogo)
+combustivelNaoChegaParaVoar = (Move Cima, comEscavadora escavadoraExemplo { combustivelEscavadora = 1 })
+
+-- | Escavar 'Diamante' custa 3: com 2 de combustível é inválida.
+combustivelNaoChegaParaDiamante :: (Jogada, Jogo)
+combustivelNaoChegaParaDiamante =
+  (Move Direita, noMapaPequeno escavadoraPequena { posicaoEscavadora = (1,3), brocaEscavadora = 3, combustivelEscavadora = 2 })
+
 -- | Os testes da Tarefa 2, que são avaliados pelos docentes.
 testesTarefa2 :: [(Jogada, Jogo)]
 testesTarefa2 = [paradoAVoar, paradoSemVoar, largaComDinamites,
                  largaComOutraNoMapa, largaAVoar, largaSemDinamites,
                  vendeNaRefinaria, vendeForaDaRefinaria, abasteceComCreditos,
                  abasteceComPoucosCreditos, abasteceForaDoPosto, reparaComCreditos,
-                 reparaComPoucosCreditos, reparaForaDaOficina, reparaComPoucosCreditos,
-                 reparaForaDaOficina, compraCarga, compraDinamitesNoLimite,
-                 compraIndiceInvalido, compraIndiceNegativo, compraSemCreditos,
-                compraQueNaoMelhora, compraForaDaOficina, compraBroca, compraVida]
+                 reparaComPoucosCreditos, reparaForaDaOficina, compraCarga,
+                 compraDinamitesNoLimite, compraIndiceInvalido, compraIndiceNegativo,
+                 compraSemCreditos, compraQueNaoMelhora, compraForaDaOficina,
+                 compraBroca, compraVida, escavaTerraDireita,
+                 escavaTerraBaixo, voaCimaApoiada, andaParaArApoiada,
+                 cimaContraBloco, escavaLava, lavaComPoucaVida,
+                 rochaInvalida, minerioDuroDemais, minerioQueCabe,
+                 minerioQueNaoCabe, minerioNoLimite, diamanteParaOLado,
+                 baixoNaUltimaLinha, escavaNaUltimaLinha, direitaNaUltimaColuna,
+                 cimaNaSuperficie, escavaAVoar, noArLadoBloco,
+                 noArBaixo, noArCima, noArLadoAr,
+                 semCombustivel, combustivelNoLimite, combustivelNaoChegaParaVoar,
+                 combustivelNaoChegaParaDiamante]
 
 
 -- | Corre os testes e abre a página de feedback. Não alterar.
